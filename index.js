@@ -10,7 +10,7 @@ import PermissionDirective from './directive/permission-directive.js';
 
 export default {
   context,
-  install(params) {
+  install(vue, params) {
     context = params;
     let vue = params.vue;
     vue.component('h-table-column', HTableColumn);
