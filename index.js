@@ -1,24 +1,62 @@
+/**
+ * 推荐将此工具放在最先导入
+ */
 
+/**
+ * 上下文参数：
+ * @param {Function} uploadFunction 上传文件时的方法
+ * @param {Function} fileHash 上传文件前获取文件Hash方法
+ * @param {Array} authCodeList v-permission指令的权限列表
+ * @param {Object} axiosInstance Axios实例
+ */
 let context = {};
 
-import HTableColumn from './element/h-table-column';
-import HImageUpload from './element/h-image-upload.vue';
-import Hpageination from './tools/h-pageination.vue';
+// js
+import ElTableExt from './lib/element/el-table-ext';
+import ElFormExt from './lib/element/form-ext';
+import contextmenu from './lib/element/contextmenu';
 
-import PermissionDirective from './directive/permission-directive.js';
+import Extend from './lib/tools/extend';
+import FileUtil from './lib/tools/FileUtil';
+import emitter from './lib/emitter'
+
+import TemplateApi from './lib/api/template.api'
+
+
+// 组件
+import HTableColumn from './lib/element/h-table-column';
+import HImageUpload from './lib/element/h-image-upload.vue';
+import Hpageination from './lib/tools/h-pageination.vue';
+
+import PermissionDirective from './lib/directive/permission-directive.js';
+
+export { 
+  context,
+  ElTableExt,
+  ElFormExt,
+  contextmenu,
+  FileUtil,
+  emitter,
+  TemplateApi
+};
 
 
 export default {
-  context,
+  /**
+   * @param {Object} vue 
+   * @param {Object} params 上下文参数
+   */
   install(vue, params) {
     context = params;
-    let vue = params.vue;
+
+    vue.use(Extend);
+
     vue.component('h-table-column', HTableColumn);
     vue.component('h-pageination', Hpageination);
     vue.component('h-image-upload', HImageUpload);
 
     // 安装指令
     vue.use(PermissionDirective);
-    vue.use(require('./directive/tips.js').default);
+    vue.use(require('./lib/directive/tips.js').default);
   },
 };

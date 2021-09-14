@@ -24,7 +24,7 @@
 
 <script>
 
-import FileUtil from '@/utils/FileUtil';
+import FileUtil from '../tools/FileUtil.js';
 
 export default {
   data () {
