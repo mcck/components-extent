@@ -5,7 +5,7 @@
 /**
  * 上下文参数：
  * @param {Function} uploadFunction 上传文件时的方法
- * @param {Function} fileHash 上传文件前获取文件Hash方法
+ * @param {Function} fileHashFunction 上传文件前获取文件Hash方法
  * @param {Array} authCodeList v-permission指令的权限列表
  * @param {Object} axiosInstance Axios实例
  */
@@ -29,6 +29,7 @@ import HImageUpload from './lib/element/h-image-upload.vue';
 import Hpageination from './lib/tools/h-pageination.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
+import MessageBox from './lib/element/message'
 
 export { 
   context,
@@ -54,6 +55,7 @@ export default {
     vue.component('h-table-column', HTableColumn);
     vue.component('h-pageination', Hpageination);
     vue.component('h-image-upload', HImageUpload);
+    vue.use(MessageBox);
 
     // 安装指令
     vue.use(PermissionDirective);

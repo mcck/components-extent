@@ -1,6 +1,6 @@
 {
   "name": "components-extent",
-  "version": "0.0.1",
+  "version": "0.0.4-beta.1",
   "main": "./lib/index.js",
   "dependencies": {
     "js-md5": "^0.7.3"
