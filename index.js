@@ -8,6 +8,7 @@
  * @param {Function} fileHashFunction 上传文件前获取文件Hash方法
  * @param {Array} authCodeList v-permission指令的权限列表
  * @param {Object} axiosInstance Axios实例
+ * @param {Array} holidayCalendar 节假日
  */
 let context = {};
 
@@ -19,6 +20,8 @@ import contextmenu from './lib/element/contextmenu';
 import Extend from './lib/tools/extend';
 import FileUtil from './lib/tools/FileUtil';
 import emitter from './lib/emitter'
+import Screenshot from './lib/tools/Screenshot'
+import GraphScale from './lib/tools/GraphScale'
 
 import TemplateApi from './lib/api/template.api'
 
@@ -32,13 +35,15 @@ import PermissionDirective from './lib/directive/permission-directive.js';
 import MessageBox from './lib/element/message'
 
 export { 
-  context,
-  ElTableExt,
-  ElFormExt,
-  contextmenu,
-  FileUtil,
-  emitter,
-  TemplateApi
+  context, // 上下文
+  ElTableExt, // 表格扩展
+  ElFormExt, // 表单扩展
+  contextmenu, // 右键菜单
+  FileUtil, // 文件工具
+  emitter, // 事件工具
+  TemplateApi, // Api模板
+  Screenshot, // 截图工具
+  GraphScale, // svg缩放工具
 };
 
 
