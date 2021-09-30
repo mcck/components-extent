@@ -6,7 +6,7 @@
       :background="page.background"
       :layout="page.layout"
       :small="page.small"
-      :total="page.total"
+      :total="total"
       :pager-count="pagerCount"
       :current-page="page.currentPage"
       :page-sizes="page.pageSizes"
@@ -15,7 +15,7 @@
       :next-text="page.nextText"
       :disabled="page.disabled"
       :hide-on-single-page="page.hideOnSinglePage"
-      :page-size="page.pageSize"
+      :page-size="pageSize"
       @prev-click="page => $emit('prev-click', page)"
       @next-click="page => $emit('next-click', page)"
       @size-change="handleSizeChange"
@@ -62,6 +62,14 @@ export default {
         return 'left';
       }
     }
+  },
+  computed: {
+    total(){
+      return parseInt(this.page.total);
+    },
+    pageSize(){
+      return parseInt(this.page.pageSize);
+    },
   },
   created(){
     let page = this.page;

@@ -20,7 +20,7 @@ import contextmenu from './lib/element/contextmenu';
 import Extend from './lib/tools/extend';
 import FileUtil from './lib/tools/FileUtil';
 import emitter from './lib/emitter'
-import Screenshot from './lib/tools/Screenshot'
+// import Screenshot from './lib/tools/Screenshot'
 import GraphScale from './lib/tools/GraphScale'
 
 import TemplateApi from './lib/api/template.api'
@@ -29,7 +29,7 @@ import TemplateApi from './lib/api/template.api'
 // 组件
 import HTableColumn from './lib/element/h-table-column';
 import HImageUpload from './lib/element/h-image-upload.vue';
-import Hpageination from './lib/tools/h-pageination.vue';
+import Hpageination from './lib/element/h-pageination.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
 import MessageBox from './lib/element/message'
@@ -42,7 +42,7 @@ export {
   FileUtil, // 文件工具
   emitter, // 事件工具
   TemplateApi, // Api模板
-  Screenshot, // 截图工具
+  // Screenshot, // 截图工具
   GraphScale, // svg缩放工具
 };
 
