@@ -1,59 +1,9 @@
 {
   "name": "components-extent",
-  "version": "0.0.4-beta.9",
+  "version": "0.0.4-beta.10",
   "main": "./lib/index.js",
+
   "dependencies": {
     "js-md5": "^0.7.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {
-      "no-unused-vars": [
-        1,
-        {
-          "vars": "all",
-          "args": "after-used"
-        }
-      ],
-      "quotes": [
-        1,
-        "single"
-      ],
-      "no-console": "off",
-      "no-debugger": 1,
-      "semi": [
-        2,
-        "always"
-      ],
-      "vue/singleline-html-element-content-newline": "off",
-      "vue/max-attributes-per-line": "off",
-      "vue/html-self-closing": "off",
-      "no-irregular-whitespace": 2,
-      "no-mixed-spaces-and-tabs": [
-        2,
-        false
-      ],
-      "indent": [
-        "error",
-        2
-      ],
-      "key-spacing": [
-        1,
-        {
-          "beforeColon": false,
-          "afterColon": true
-        }
-      ]
-    }
   }
 }
