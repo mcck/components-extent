@@ -1,6 +1,6 @@
 {
   "name": "components-extent",
-  "version": "0.0.4-beta.10",
+  "version": "0.0.4-beta.13",
   "main": "./lib/index.js",
 
   "dependencies": {
