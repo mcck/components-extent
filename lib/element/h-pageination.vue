@@ -98,13 +98,16 @@ export default {
       }
       // 如果没有就自动计算
       if(this.$refs.pagination){
-        let width = this.$el.parentElement.clientWidth;
+        let parent = this.$el.parentElement;
+        let width = parent.clientWidth;
+        width -= parent.computedStyleValue('padding-left');
+        width -= parent.computedStyleValue('padding-right');
         if(width){ // 不等于0才继续
           // 计算
-          let c = parseInt((width - 80 - 120 - 80) / 40);
-          if(c > 21){
-            c = 21;
-          }else if(c < 5){
+          let c = parseInt((width - 180/*总数*/ - 120/*每页数量*/ - 80/*左右箭头*/) / 40/*每个页码*/);
+          if(c > 20){ // 最多20个
+            c = 20;
+          }else if(c < 5){ // 最少5个
             c =5;
           }else{
             

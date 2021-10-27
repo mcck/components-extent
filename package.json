@@ -1,8 +1,8 @@
 {
   "name": "components-extent",
   "version": "0.0.4-beta.15",
-  "main": "./lib/index.js",
-
+  "main": "./index.js",
+  "author": "HeYuJie",
   "dependencies": {
     "js-md5": "^0.7.3"
   }

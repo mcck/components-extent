@@ -26,12 +26,13 @@ import TemplateApi from './lib/api/template.api'
 
 
 // 组件
-import HTableColumn from './lib/element/h-table-column';
+import HTableColumn from './lib/element/h-table-column.vue';
 import HImageUpload from './lib/element/h-image-upload.vue';
 import Hpageination from './lib/element/h-pageination.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
-import MessageBox from './lib/element/message'
+import TipsDirective from './lib/directive/tips.js';
+import MessageBox from './lib/element/message.js'
 
 export { 
   context, // 上下文
@@ -62,6 +63,6 @@ export default {
 
     // 安装指令
     vue.use(PermissionDirective);
-    vue.use(require('./lib/directive/tips.js').default);
+    vue.use(TipsDirective);
   },
 };
