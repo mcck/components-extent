@@ -125,6 +125,7 @@ export default {
 .h-table-popover-text{
   width: 100%;
   max-height: 400px;
+  max-width: 500px;
   white-space: pre;
   overflow: auto;
 }
