@@ -16,15 +16,17 @@
         <div class="custom-call" :v="(val=colValue(scope)) && ''">
           <!-- 复制图标 -->
           <i v-if="isValue(copy) && scope.row[scope.column.property]" class="copy-icon el-icon-document-copy" @click="handleCopy($event, scope)" title="点击复制"></i>
-          <el-popover v-if="details != undefined && val" placement="left" popper-class="h-table-popover" trigger="click">
+
+          <el-popover v-if="popover && val" placement="left" popper-class="h-table-popover" :trigger="popover.trigger" :width="popover.style?.width">
             <!-- <textarea class="h-table-popover" :value="colValue(scope)"></textarea> -->
-            <div class="h-table-popover-text">{{colValue(scope)}}</div>
+            <div :style="popover.style" :class="popover.class">{{colValue(scope)}}</div>
             <template #reference>
-              <span :ref="'carrier'+ scope.$index"></span>
+              <span :ref="'carrier'+ scope.$index" style="cursor: pointer;">{{val}}</span>
             </template>
           </el-popover>
+
           <!-- 显示内容 -->
-          <div ref="content" class="call-text" :style="{cursor:isEvent()?'pointer':''}" @click="handleContent($event, scope)" :title="val">{{val}}</div>
+          <div v-else ref="content" class="call-text" :style="{cursor:isEvent()?'pointer':''}" @click="handleEvent($event, scope)" :title="val">{{val}}</div>
         </div>
       </slot>
     </template>
@@ -38,11 +40,13 @@ export default {
     return {
       mode: 0,
       detailsEvent: {
-        click: ['details'] // 设置哪些属性有点击事件，做出对应的样式和调用方法
-      }
+        click: ['details'], // 设置哪些属性有点击事件，做出对应的样式和调用方法
+      },
+      popover: false,
     };
   },
   created() {
+    this.detailsConfig();
   },
   props: [
     'type', 'index', 'column-key', 'label', 'prop', 'width', 'minWidth', 'fixed', 'render-header', 'sortable', 'sort-method', 'sort-by', 'sort-orders', 'resizable',
@@ -77,7 +81,8 @@ export default {
     isValue(v) {
       return v != undefined && v != null && v !== false;
     },
-    handleContent(event, scope) {
+    handleEvent(event, scope) {
+      debugger
       let self = this;
       self.detailsEvent[event.type].forEach((eventName) => {
         if (self[eventName] != undefined) {
@@ -87,6 +92,9 @@ export default {
     },
     exec_details(event, scope) {
       this.$refs['carrier'+ scope.$index].click();
+      // var mouseClick = document.createEvent('MouseEvent');
+      // mouseClick.initMouseEvent(event.type, false, false, null);
+      // this.$refs['carrier'+ scope.$index].dispatchEvent(mouseClick);
     },
     handleCopy(event, scope) {
       // 切换图标
@@ -96,6 +104,19 @@ export default {
         i.classList.replace('el-icon-check', 'el-icon-document-copy');
       }, 1500);
       window.copyToClip(scope.column.currentValue);
+    },
+    detailsConfig(){
+      let self = this;
+      if(!self.isValue(self.details)){
+        self.popover = false;
+        return;
+      }
+      self.popover = {
+        placement: 'left',
+        class: 'h-table-popover-text',
+        trigger: 'click',
+        ...self.details
+      };
     }
   }
 };
