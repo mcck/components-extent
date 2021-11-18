@@ -112,7 +112,7 @@ export default {
 .h-image-upload{
   display: inline-block;
 }
-.h-image-upload /deep/ .el-upload {
+.h-image-upload :deep(.el-upload) {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
@@ -123,7 +123,7 @@ export default {
   height: 100%;
   display: table-cell;
 }
-.h-image-upload /deep/.el-upload:hover {
+.h-image-upload :deep(.el-upload:hover) {
   border-color: #409EFF;
 }
 .avatar-uploader-icon {

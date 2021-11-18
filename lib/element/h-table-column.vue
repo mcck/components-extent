@@ -6,27 +6,16 @@
   details：添加单元格文字样式，点击后弹窗查看详情内容
 -->
 <template>
-  <el-table-column ref="coll" :type="type" :index="index" :column-key="columnKey" :label="label" :prop="prop" :width="width" :min-width="minWidth" :fixed="fixed"
-                   :render-header="renderHeader" :sortable="sortable" :sort-method="sortMethod" :sort-by="sortBy" :sort-orders="sortOrders" :resizable="resizable"
-                   :show-overflow-tooltip="showOverflowTooltip" :align="align" :header-align="headerAlign" :class-name="className" :label-class-name="labelClassName"
-                   :selectable="selectable" :reserve-selection="reserveSelection" :filters="filters" :filter-placement="filterPlacement" :filter-multiple="filterMultiple"
-                   :filter-method="filterMethod" :filtered-value="filteredValue">
+  <el-table-column ref="root" :show-overflow-tooltip="false">
     <template #default="scope">
       <slot :store="scope.store" :_self="scope._self" :column="scope.column" :row="scope.row" :$index="scope.$index">
-        <div class="custom-call" :v="(val=colValue(scope)) && ''">
           <!-- 复制图标 -->
-          <i v-if="isValue(copy) && scope.row[scope.column.property]" class="copy-icon el-icon-document-copy" @click="handleCopy($event, scope)" title="点击复制"></i>
-
-          <el-popover v-if="popover && val" placement="left" popper-class="h-table-popover" :trigger="popover.trigger" :width="popover.style?.width">
-            <!-- <textarea class="h-table-popover" :value="colValue(scope)"></textarea> -->
-            <div :style="popover.style" :class="popover.class">{{colValue(scope)}}</div>
-            <template #reference>
-              <span :ref="'carrier'+ scope.$index" style="cursor: pointer;">{{val}}</span>
-            </template>
-          </el-popover>
-
-          <!-- 显示内容 -->
-          <div v-else ref="content" class="call-text" :style="{cursor:isEvent()?'pointer':''}" @click="handleEvent($event, scope)" :title="val">{{val}}</div>
+        <i v-if="isValue(copy) && scope.row[scope.column.property]" class="copy-icon el-icon-document-copy" @click="handleCopy($event, scope)" title="点击复制"></i>
+        <div class="custom-call" :i="initColumn(scope)"
+          :style="style"
+          @mouseover="handleMouseoverEvent($event, scope)"
+          @mouseout="handleMouseoutEvent($event, scope)"
+          v-text="colValue(scope)">
         </div>
       </slot>
     </template>
@@ -34,29 +23,38 @@
 </template>
 
 <script>
+
+import {createPopper} from '@popperjs/core';
+
 export default {
   name: 'h-table-column',
   data() {
     return {
-      mode: 0,
-      detailsEvent: {
-        click: ['details'], // 设置哪些属性有点击事件，做出对应的样式和调用方法
+      style: {
+        // cursor: this.isEvent()?'pointer':''
       },
-      popover: false,
+      tooltip: false
     };
   },
-  created() {
-    this.detailsConfig();
-  },
   props: [
-    'type', 'index', 'column-key', 'label', 'prop', 'width', 'minWidth', 'fixed', 'render-header', 'sortable', 'sort-method', 'sort-by', 'sort-orders', 'resizable',
-    'show-overflow-tooltip', 'align', 'header-align', 'class-name', 'label-class-name', 'selectable', 'reserve-selection', 'filters', 'filter-placement', 'filter-multiple',
-    'filter-method', 'filtered-value',
     'copy', // 添加复制按钮
     'formatter', // 重写formatter功能
-    'details' // 单机弹窗查看详情
+    'show-overflow-tooltip', // 重写 show-overflow-tooltip 的功能
   ],
+  created() {
+    this.setTooltip(this.showOverflowTooltip);
+  },
   methods: {
+    initColumn(scope){
+      let id = scope.column.id;
+      let cols = scope._self.refs.bodyWrapper.querySelectorAll('.'+id);
+      // console.log(id);
+      if(cols){
+        cols.forEach(item => {
+          item.style.width = scope.column.realWidth+ "px";
+        });
+      }
+    },
     colValue(scope) {
       let val = scope.row[scope.column.property];
       if (this.formatter instanceof Function) {
@@ -81,20 +79,80 @@ export default {
     isValue(v) {
       return v != undefined && v != null && v !== false;
     },
-    handleEvent(event, scope) {
-      debugger
+    setTooltip(val){
+      if(!this.isValue(val)){
+        this.tooltip = false;
+      } else {
+        this.tooltip = {
+          ...this.showOverflowTooltip
+        };
+      }
+    },
+    handleMouseoverEvent(event, scope) {
       let self = this;
-      self.detailsEvent[event.type].forEach((eventName) => {
-        if (self[eventName] != undefined) {
-          self['exec_' + eventName](event, scope, eventName);
-        }
+      if(self.tooltip != false){
+        self.showPopper(event, scope);
+      }
+    },
+    showPopper(event, scope){
+      let self = this;
+      let popperInstance = scope.popperInstance;
+      if(popperInstance){
+        popperInstance.update();
+        document.body.appendChild(popperInstance.state.elements.popper);
+        return;
+      }
+
+      // 创建提示
+      function renderContent(){
+        let div = document.createElement('div');
+        div.setAttribute(self.$options.__scopeId, '')
+        div.className = 'el-popper h-table-popper';
+
+        let div2 = document.createElement('div');
+        div2.className = 'h-table-popper__content'
+        // div2.innerText = event.srcElement.innerText;
+        div2.innerText = self.colValue(scope);
+
+        div.appendChild(div2);
+
+        let tooltip = self.tooltip;
+        let style = div.style;
+        style.setProperty('--h-table-popper-color', tooltip.color||'');
+        style.setProperty('--h-table-popper-text-color', tooltip.textColor||'');
+        style.setProperty('--h-table-popper-border-color', tooltip.borderColor||'');
+        Object.assign(div.style, tooltip.style);
+        
+        return div;
+      }
+
+      function renderArrow() {
+        const arrow2 = document.createElement("div");
+        arrow2.className = "el-popper__arrow";
+        return arrow2;
+      }
+
+      let content = renderContent();
+      let arrow = renderArrow();
+
+      content.appendChild(arrow);
+      document.body.appendChild(content);
+      popperInstance = scope.popperInstance = createPopper(event.srcElement, content, {
+        modifiers: [
+          {name: "offset", options: { offset: [0, 8] } },
+          {name: "arrow", options: { element: arrow, padding: 10 }}
+        ],
+        placement: "left",
+        strategy: "fixed",
+        ...self.tooltip
       });
     },
-    exec_details(event, scope) {
-      this.$refs['carrier'+ scope.$index].click();
-      // var mouseClick = document.createEvent('MouseEvent');
-      // mouseClick.initMouseEvent(event.type, false, false, null);
-      // this.$refs['carrier'+ scope.$index].dispatchEvent(mouseClick);
+    handleMouseoutEvent(event, scope){
+
+      if(scope.popperInstance){
+        document.body.removeChild(scope.popperInstance.state.elements.popper);
+      }
+
     },
     handleCopy(event, scope) {
       // 切换图标
@@ -105,20 +163,18 @@ export default {
       }, 1500);
       window.copyToClip(scope.column.currentValue);
     },
-    detailsConfig(){
-      let self = this;
-      if(!self.isValue(self.details)){
-        self.popover = false;
-        return;
-      }
-      self.popover = {
-        placement: 'left',
-        class: 'h-table-popover-text',
-        trigger: 'click',
-        ...self.details
-      };
-    }
   }
+};
+
+const getCell = function(event) {
+  let cell = event.target;
+  while (cell && cell.tagName.toUpperCase() !== "HTML") {
+    if (cell.tagName.toUpperCase() === "TD") {
+      return cell;
+    }
+    cell = cell.parentNode;
+  }
+  return null;
 };
 
 </script>
@@ -140,9 +196,6 @@ export default {
   white-space: nowrap;
   word-break: break-all;
 }
-.call-text{
-  display: initial;
-}
 .h-table-popover-text{
   width: 100%;
   max-height: 400px;
@@ -150,9 +203,29 @@ export default {
   white-space: pre;
   overflow: auto;
 }
+
+.h-table-popper{
+  --h-table-popper-color: #FFF;
+  --h-table-popper-text-color: #000;
+  --h-table-popper-border-color: #000;
+
+  max-width: 300px;
+  padding: 0;
+  white-space: pre-wrap;
+  color: var(--h-table-popper-text-color);
+  background-color: var(--h-table-popper-color);
+  border: 1px solid var(--h-table-popper-border-color);
+}
+.h-table-popper :deep >.h-table-popper__content{
+  padding: 10px;
+  border-radius: var(--el-popper-border-radius);
+  background-color: var(--h-table-popper-color);
+}
+.h-table-popper :deep >.el-popper__arrow::before{
+  background-color: var(--h-table-popper-color);
+  border: 1px solid var(--h-table-popper-border-color);
+}
+
 </style>
 <style>
-.h-table-popover{
-  width: auto !important;
-}
 </style>
