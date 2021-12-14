@@ -1,6 +1,6 @@
 <!-- 分页工具 -->
 <template>
-  <div class="h-pagination" :style="{textAlign: align == 'right'?'right':'left'}">
+  <div class="h-pagination" :style="{textAlign: align}">
     <el-pagination
       ref="pagination" 
       :background="page.background"
