@@ -18,6 +18,7 @@ import ElFormExt from './lib/element/form-ext';
 import contextmenu from './lib/element/contextmenu';
 
 import Extend from './lib/tools/extend';
+import Utils from './lib/tools/utils';
 import FileUtil from './lib/tools/FileUtil';
 import emitter from './lib/emitter'
 // import Screenshot from './lib/tools/Screenshot'
@@ -34,7 +35,8 @@ import PermissionDirective from './lib/directive/permission-directive.js';
 import TipsDirective from './lib/directive/tips.js';
 import MessageBox from './lib/element/message.js'
 
-export { 
+export {
+  Utils, // 工具
   context, // 上下文
   ElTableExt, // 表格扩展
   ElFormExt, // 表单扩展
