@@ -20,6 +20,7 @@ import contextmenu from './lib/element/contextmenu';
 import Extend from './lib/tools/extend';
 import Utils from './lib/tools/utils';
 import FileUtil from './lib/tools/FileUtil';
+import DateUtil from './lib/tools/DateUtil';
 import emitter from './lib/emitter'
 // import Screenshot from './lib/tools/Screenshot'
 
@@ -44,6 +45,7 @@ export {
   FileUtil, // 文件工具
   emitter, // 事件工具
   TemplateApi, // Api模板
+  DateUtil,
   // Screenshot, // 截图工具
 };
 
