@@ -28,11 +28,11 @@ mixins: [ElTableExt]
       <div class="table-button-left" @keydown.enter="getTableList">
         <div class="table-button-item">
           <label>名称</label>
-          <el-input v-model="queryParam.name_like" clearable size="mini"></el-input>
+          <el-input v-model="queryParam.name_like" clearable size="small"></el-input>
         </div>
       </div>
       <div class="table-button-right">
-        <el-button @click="getTableList" size="mini" type="primary">搜索/刷新</el-button>
+        <el-button @click="getTableList" size="small" type="primary">搜索/刷新</el-button>
       </div>
     </div>
     <el-table ref="table" :data="table.list" :max-height="table.height"
@@ -45,8 +45,8 @@ mixins: [ElTableExt]
       <h-table-column prop="newsTitle" label="标题" sortable="custom"></h-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="{row}">
-          <el-button type="text" size="mini" @click="toEditPage(row)" >编辑</el-button>
-          <el-button type="text" class="error-text" size="mini" @click="deleteRow(row)">删除</el-button>
+          <el-button type="text" size="small" @click="toEditPage(row)" >编辑</el-button>
+          <el-button type="text" class="error-text" size="small" @click="deleteRow(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
