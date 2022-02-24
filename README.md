@@ -51,7 +51,7 @@ mixins: [ElTableExt]
       </el-table-column>
     </el-table>
 
-    <h-pageination :page="table.page" align="right" :refresh="getTableList"></h-pageination>
+    <h-pageination :page="page" align="right" :refresh="getTableList"></h-pageination>
   </div>
 
 ```

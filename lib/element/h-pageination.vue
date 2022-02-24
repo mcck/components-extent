@@ -123,14 +123,14 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.page.pageSize = pageSize;
       this.refresh && this.refresh();
-      this.$emit('refresh', {pageSize, page: this.page.page});
+      this.$emit('refresh', {pageSize, page: this.page.pageNum});
       this.$emit('size-change', pageSize);
     },
     handleCurrentChange (page) {
       if(page){
-        //this.page.page = this.page.pageSize * page - this.page.pageSize;
+        //this.page.pageNum = this.page.pageSize * page - this.page.pageSize;
         // eslint-disable-next-line vue/no-mutating-props
-        this.page.page = page;
+        this.page.pageNum = page;
         this.refresh && this.refresh();
         this.$emit('refresh', {page, pageSize: this.page.pageSize});
         this.$emit('current-change', page);
