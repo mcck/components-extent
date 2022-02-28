@@ -9,18 +9,20 @@
  * @param {Array} authCodeList v-permission指令的权限列表
  * @param {Object} axiosInstance Axios实例
  * @param {Array} holidayCalendar 节假日
+ * @param {String} uploadUrl 文件上传url，主要用在image-upload组件和upload组件
  */
 let context = {};
 
 // js
 import ElTableExt from './lib/element/el-table-ext';
 import ElFormExt from './lib/element/form-ext';
-import contextmenu from './lib/element/contextmenu';
+import contextmenu from './lib/tools/contextmenu';
 
 import Extend from './lib/tools/extend';
 import Utils from './lib/tools/utils';
 import FileUtil from './lib/tools/FileUtil';
 import DateUtil from './lib/tools/DateUtil';
+import MediaPreview from './lib/tools/MediaPreview';
 import emitter from './lib/emitter'
 // import Screenshot from './lib/tools/Screenshot'
 
@@ -31,6 +33,7 @@ import TemplateApi from './lib/api/template.api'
 import HTableColumn from './lib/element/h-table-column.vue';
 import HImageUpload from './lib/element/h-image-upload.vue';
 import Hpageination from './lib/element/h-pageination.vue';
+import ImageList from './lib/element/image-list.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
 import TipsDirective from './lib/directive/tips.js';
@@ -46,6 +49,7 @@ export {
   emitter, // 事件工具
   TemplateApi, // Api模板
   DateUtil,
+  MediaPreview, // 媒体预览
   // Screenshot, // 截图工具
 };
 
@@ -63,6 +67,7 @@ export default {
     vue.component('h-table-column', HTableColumn);
     vue.component('h-pageination', Hpageination);
     vue.component('h-image-upload', HImageUpload);
+    vue.component('image-list', ImageList);
     vue.use(MessageBox);
 
     // 安装指令
