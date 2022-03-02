@@ -105,7 +105,6 @@ export default {
       });
     },
     handlePreview(file){
-      debugger
       let files = this.list;
       let i = files.indexOf(file);
       if(i != -1){
