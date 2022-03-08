@@ -17,6 +17,7 @@ let context = {};
 import ElTableExt from './lib/element/el-table-ext';
 import ElFormExt from './lib/element/form-ext';
 import contextmenu from './lib/tools/contextmenu';
+import Constant from './lib/tools/constant';
 
 import Extend from './lib/tools/extend';
 import Utils from './lib/tools/utils';
@@ -50,6 +51,7 @@ export {
   TemplateApi, // Api模板
   DateUtil,
   MediaPreview, // 媒体预览
+  Constant, // 常量
   // Screenshot, // 截图工具
 };
 
