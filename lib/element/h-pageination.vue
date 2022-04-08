@@ -72,6 +72,7 @@ export default {
     },
   },
   created(){
+    console.warn('已过时，h-pageination组件未来将移除，请使用el-pagination原生插件');
     let page = this.page;
     if(!page.layout){
       page.layout = 'total, sizes, prev, pager, next';
