@@ -1,6 +1,6 @@
 {
   "name": "components-extent",
-  "version": "0.0.5-beta.1",
+  "version": "0.0.5-beta.2",
   "main": "./index.js",
   "author": "HeYuJie",
   "dependencies": {
