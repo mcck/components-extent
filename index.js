@@ -38,6 +38,10 @@ import ImageList from './lib/element/image-list.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
 import TipsDirective from './lib/directive/tips.js';
+import DraggableDirective from './lib/directive/draggable.js';
+import ScopeDirective from './lib/directive/scope';
+
+
 import MessageBox from './lib/element/message.js'
 
 export {
@@ -75,5 +79,7 @@ export default {
     // 安装指令
     vue.use(PermissionDirective);
     vue.use(TipsDirective);
+    vue.use(DraggableDirective);
+    vue.use(ScopeDirective);
   },
 };
