@@ -16,7 +16,7 @@ let context = {};
 // js
 import ElTableExt from './lib/element/el-table-ext';
 import ElFormExt from './lib/element/form-ext';
-import contextmenu from './lib/tools/contextmenu';
+import Contextmenu from './lib/tools/contextmenu';
 import Constant from './lib/tools/constant';
 
 import Extend from './lib/tools/extend';
@@ -49,7 +49,7 @@ export {
   context, // 上下文
   ElTableExt, // 表格扩展
   ElFormExt, // 表单扩展
-  contextmenu, // 右键菜单
+  Contextmenu, // 右键菜单
   FileUtil, // 文件工具
   emitter, // 事件工具
   TemplateApi, // Api模板
