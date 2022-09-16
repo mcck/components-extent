@@ -11,7 +11,7 @@
  * @param {Array} holidayCalendar 节假日
  * @param {String} uploadUrl 文件上传url，主要用在image-upload组件和upload组件
  */
-let context = {};
+const context = {};
 
 // js
 import ElTableExt from './lib/element/el-table-ext';
@@ -25,6 +25,7 @@ import FileUtil from './lib/tools/FileUtil';
 import DateUtil from './lib/tools/DateUtil';
 import MediaPreview from './lib/tools/MediaPreview';
 import emitter from './lib/emitter'
+import { emitterInstall } from './lib/emitter'
 // import Screenshot from './lib/tools/Screenshot'
 
 import TemplateApi from './lib/api/template.api'
@@ -66,8 +67,7 @@ export default {
    * @param {Object} params 上下文参数
    */
   install(vue, params) {
-    context = params;
-
+    Object.assign(context, params);
     vue.use(Extend);
 
     vue.component('h-table-column', HTableColumn);
@@ -81,5 +81,6 @@ export default {
     vue.use(TipsDirective);
     vue.use(DraggableDirective);
     vue.use(ScopeDirective);
+    vue.use(emitterInstall);
   },
 };
