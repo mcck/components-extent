@@ -26,16 +26,10 @@ import DateUtil from './lib/tools/DateUtil';
 import MediaPreview from './lib/tools/MediaPreview';
 import emitter from './lib/emitter'
 import { emitterInstall } from './lib/emitter'
-// import Screenshot from './lib/tools/Screenshot'
+import { init as HistoryStateMangeInit } from './lib/tools/HistoryStateMange'
 
 import TemplateApi from './lib/api/template.api'
 
-
-// 组件
-import HTableColumn from './lib/element/h-table-column.vue';
-import HImageUpload from './lib/element/h-image-upload.vue';
-import Hpageination from './lib/element/h-pageination.vue';
-import ImageList from './lib/element/image-list.vue';
 
 import PermissionDirective from './lib/directive/permission-directive.js';
 import TipsDirective from './lib/directive/tips.js';
@@ -43,7 +37,7 @@ import DraggableDirective from './lib/directive/draggable.js';
 import ScopeDirective from './lib/directive/scope';
 
 
-import MessageBox from './lib/element/message.js'
+// import MessageBox from './lib/element/message.js'
 
 export {
   Utils, // 工具
@@ -70,17 +64,15 @@ export default {
     Object.assign(context, params);
     vue.use(Extend);
 
-    vue.component('h-table-column', HTableColumn);
-    vue.component('h-pageination', Hpageination);
-    vue.component('h-image-upload', HImageUpload);
-    vue.component('image-list', ImageList);
-    vue.use(MessageBox);
-
     // 安装指令
     vue.use(PermissionDirective);
     vue.use(TipsDirective);
     vue.use(DraggableDirective);
     vue.use(ScopeDirective);
     vue.use(emitterInstall);
+
+    if (params.initHistoryStateMange){
+      HistoryStateMangeInit();
+    }
   },
 };
