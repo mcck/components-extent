@@ -15,6 +15,13 @@ axiosInstance：axios请求工具对象
 ## 按需引入
 请查看 index.js文件
 
+
+### 注意
+element-ui 相关的组件需要单独注册
+```
+import ElementExtent from 'components-extent/lib/element/index.js';
+app.use(ElementExtent);
+```
 ### 表格工具
 ```
 import {ElTableExt} from 'components-extent';

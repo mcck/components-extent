@@ -37,7 +37,8 @@ import DraggableDirective from './lib/directive/draggable.js';
 import ScopeDirective from './lib/directive/scope';
 
 
-// import MessageBox from './lib/element/message.js'
+import InfoDesc from './lib/components/info-descriptions/index.js';
+
 
 export {
   Utils, // 工具
@@ -70,6 +71,7 @@ export default {
     vue.use(DraggableDirective);
     vue.use(ScopeDirective);
     vue.use(emitterInstall);
+    vue.use(InfoDesc);
 
     if (params.initHistoryStateMange){
       HistoryStateMangeInit();
