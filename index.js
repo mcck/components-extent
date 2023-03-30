@@ -27,6 +27,8 @@ import MediaPreview from './lib/tools/MediaPreview';
 import emitter from './lib/emitter'
 import { emitterInstall } from './lib/emitter'
 import { init as HistoryStateMangeInit } from './lib/tools/HistoryStateMange'
+import ThreadPool from './lib/tools/ThreadPool';
+import MaxFileUploader from './lib/tools/MaxFileUploader';
 
 import TemplateApi from './lib/api/template.api'
 
@@ -53,6 +55,8 @@ export {
   MediaPreview, // 媒体预览
   Constant, // 常量
   // Screenshot, // 截图工具
+  ThreadPool, // 线城池
+  MaxFileUploader, // 大文件上传
 };
 
 
