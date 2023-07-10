@@ -604,32 +604,3 @@ export function taskQueueUtil(taskList, maxConcurrency = 10) {
     })
   })
 }
-
-
-export default {
-  isType,
-  attrCount, // 计算对象属性个数
-  deleteEmpty, // 删除为空的属性
-  different, // 计算两个对象的字段差集,一传入的传入的参数为结果
-  deepClone, // 对象深拷贝
-  number_chinese_money, // 数字转金额大写
-  numberToCapital, // 转大写
-  inferElementHeight, // 推算el高度
-  ElementCreate, // 创建element
-  path, // path
-  getPosLen, // 计算2个像素点距离
-  formatElValue, // 获取元素值
-  hasNotValue, // 判断是否没值
-  hasValue, // 
-  parseToURL, // 解析字符串为URL
-  TreeToList, 
-  ListToTree,
-  compareObject, // 比较两个对象的属性是否相等
-  toFixed, // 保留小数
-  setObjPropEnumerable,
-  isNumber, // 判断是否是数字
-  backHandle, // 处理浏览器返回时
-  retry, // 重试工具
-  deepMerge, // 深度合并工具
-  taskQueueUtil, // 任务队列工具
-}

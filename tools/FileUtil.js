@@ -2,7 +2,7 @@
 import md5 from 'js-md5';
 import {isType} from './utils';
 // FileApi 必须拥有upload方法
-import { context } from '../../index';
+import { context } from '../index';
 
 
 /**

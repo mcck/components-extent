@@ -14,32 +14,32 @@
 const context = {};
 
 // js
-import ElTableExt from './lib/element/el-table-ext';
-import ElFormExt from './lib/element/form-ext';
-import Contextmenu from './lib/tools/contextmenu';
-import Constant from './lib/tools/constant';
+import ElTableExt from './element/el-table-ext';
+import ElFormExt from './element/form-ext';
+import Contextmenu from './tools/contextmenu';
+import Constant from './tools/constant';
 
-import Extend from './lib/tools/extend';
-import Utils from './lib/tools/utils';
-import FileUtil from './lib/tools/FileUtil';
-import DateUtil from './lib/tools/DateUtil';
-import MediaPreview from './lib/tools/MediaPreview';
-import emitter from './lib/emitter'
-import { emitterInstall } from './lib/emitter'
-import { init as HistoryStateMangeInit } from './lib/tools/HistoryStateMange'
-import ThreadPool from './lib/tools/ThreadPool';
-import MaxFileUploader from './lib/tools/MaxFileUploader';
+import Extend from './tools/extend';
+import Utils from './tools/utils';
+import FileUtil from './tools/FileUtil';
+import DateUtil from './tools/DateUtil';
+import MediaPreview from './tools/MediaPreview';
+import emitter from './emitter'
+import { emitterInstall } from './emitter'
+import { init as HistoryStateMangeInit } from './tools/HistoryStateMange'
+import ThreadPool from './tools/ThreadPool';
+import MaxFileUploader from './tools/MaxFileUploader';
 
-import TemplateApi from './lib/api/template.api'
-
-
-import PermissionDirective from './lib/directive/permission-directive.js';
-import TipsDirective from './lib/directive/tips.js';
-import DraggableDirective from './lib/directive/draggable.js';
-import ScopeDirective from './lib/directive/scope';
+import TemplateApi from './api/template.api'
 
 
-import InfoDesc from './lib/components/info-descriptions/index.js';
+import PermissionDirective from './directive/permission-directive.js';
+import TipsDirective from './directive/tips.js';
+import DraggableDirective from './directive/draggable.js';
+import ScopeDirective from './directive/scope';
+
+
+import InfoDesc from './components/info-descriptions/index.js';
 
 
 export {

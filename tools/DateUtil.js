@@ -1,4 +1,4 @@
-import { context } from '../../index';
+import { context } from '../index';
 
 let compute = {};
 

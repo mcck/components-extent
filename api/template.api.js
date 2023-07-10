@@ -1,4 +1,4 @@
-import {context} from '../../index';
+import {context} from '../index';
 
 // 通用的API接口，请配合代码生成器使用
 

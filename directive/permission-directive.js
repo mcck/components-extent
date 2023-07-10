@@ -22,7 +22,7 @@
  *   style: unauth为style时启用，没有权限时在节点上添加的style
  */
 
-import {context} from '../../index';
+import {context} from '../index';
 function buildParams(val){
   if(!val){
     return;
