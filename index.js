@@ -20,7 +20,7 @@ import Contextmenu from './tools/contextmenu';
 import Constant from './tools/constant';
 
 import Extend from './tools/extend';
-import Utils from './tools/utils';
+import * as Utils from './tools/utils';
 import FileUtil from './tools/FileUtil';
 import DateUtil from './tools/DateUtil';
 import MediaPreview from './tools/MediaPreview';

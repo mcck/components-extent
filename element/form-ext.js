@@ -86,41 +86,46 @@ export function newInstance() {
             return false;
           }
           try {
-            let form = { ...self.form };
-            if (self.handleConfirmBefore) {
-              let result = self.handleConfirmBefore(form);
-              if (result === false) { // 停止请求
-                return;
-              } else if (result != undefined) {
-                form = result;
-              }
-            }
-
-            if (typeof (handle) == 'function') {
-              handle.call(self, form);
-              return;
-            } else if (typeof (handle) == 'string') {
-              let fn = self['handle' + handle];
-              if (fn) {
-                fn.call(self, form);
-              } else {
-                throw new Error('找不到【handle' + handle + '】方法');
-              }
-              return;
-            }
-
+            let config = {
+              isEdit: true, // 是否是编辑
+              request: true, // 是否请求
+              form: { ...self.form }, //表单数据
+              handle: handle // 处理方法
+            };
             // 判断当前是编辑还是添加
-            let isEdit;
-            if(self.mode){
-              isEdit = self.mode == MODE.EDIT;
+            if (self.mode) {
+              config.isEdit = self.mode == MODE.EDIT;
             } else {
-              isEdit = !!self.form.id;
+              config.isEdit = !!config.form.id;
             }
 
-            if (isEdit) {
-              self.handleUpdate(form);
+            
+            if (self.handleConfirmBefore instanceof Function) {
+              self.handleConfirmBefore(config);
+              if (config.request === false) { // 停止请求
+                return;
+              }
+            }
+
+            if (typeof (config.handle) == 'function') {
+              config.handle.call(self, config.form);
+              return;
+            } else if (typeof (config.handle) == 'string') {
+              let fn = self['handle' + config.handle];
+              if (fn) {
+                fn.call(self, config.form);
+              } else {
+                throw new Error('找不到【handle' + config.handle + '】方法');
+              }
+              return;
+            }
+
+            
+
+            if (config.isEdit) {
+              self.handleUpdate(config.form);
             } else {
-              self.handleAdd(form);
+              self.handleAdd(config.form);
             }
           } catch (e) {
             console.error(e);

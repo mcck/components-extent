@@ -19,7 +19,7 @@ axiosInstance：axios请求工具对象
 ### 注意
 element-ui 相关的组件需要单独注册
 ```js
-import ElementExtent from 'components-extent/lib/element/index.js';
+import ElementExtent from 'components-extent/element/index.js';
 app.use(ElementExtent);
 ```
 ### 表格工具
