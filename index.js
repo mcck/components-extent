@@ -41,6 +41,8 @@ import ScopeDirective from './directive/scope';
 
 import InfoDesc from './components/info-descriptions/index.js';
 
+export * from './tools/ListUtil';
+
 
 export {
   Utils, // 工具
