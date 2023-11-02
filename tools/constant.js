@@ -1,4 +1,4 @@
-const LinkSymbol = Object.freeze({
+export const LinkSymbol = Object.freeze({
   eq: 'eq', // 等于
   ne: 'ne', // 不等于
   gt: 'gt', // 大于
@@ -13,9 +13,14 @@ const LinkSymbol = Object.freeze({
   notIn: 'notIn' // 不包含集合
 });
 
-export {
-  LinkSymbol
-}
+
+export const FormMode = Object.freeze({
+  ADD: 0,
+  EDIT: 1,
+  CHECK: 2
+});
+
 export default {
-  LinkSymbol
+  LinkSymbol,
+  FormMode
 }

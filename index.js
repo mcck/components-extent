@@ -10,12 +10,22 @@
  * @param {Object} axiosInstance Axios实例
  * @param {Array} holidayCalendar 节假日
  * @param {String} uploadUrl 文件上传url，主要用在image-upload组件和upload组件
+ * @param {Object} message 消息对象
+ * @param {Function} message.alert 成功提示消息
+ * @param {Function} message.confirm 确认提示消息
  */
-const context = {};
+export const context = {};
+window.context = context;
 
 // js
 import ElTableExt from './element/el-table-ext';
 import ElFormExt from './element/form-ext';
+
+export {default as TableHelper} from './setup/TableHelper.js';
+export { default as FormHelper } from './setup/FormHelper.js';
+
+
+
 import Contextmenu from './tools/contextmenu';
 import Constant from './tools/constant';
 
@@ -46,7 +56,6 @@ export * from './tools/ListUtil';
 
 export {
   Utils, // 工具
-  context, // 上下文
   ElTableExt, // 表格扩展
   ElFormExt, // 表单扩展
   Contextmenu, // 右键菜单

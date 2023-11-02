@@ -476,6 +476,37 @@ if (!Array.prototype.at){
   };
 }
 
+/**
+ * 判断数组是否包含另一个数组
+ */
+Array.prototype.contains = function (arr, comparer) {
+  let comparer_ = comparer;
+  if (typeof (comparer) == 'string') {
+    comparer_ = function (item1, item2) {
+      return item1[comparer] == item2[comparer];
+    }
+  } else if (comparer instanceof Function) {
+    comparer_ = comparer;
+  } else {
+    comparer_ = function (item1, item2) {
+      return item1 == item2;
+    }
+  }
+  for (let item1 of arr) {
+    let flag = false;
+    for (let item2 of this) {
+      if (comparer_(item1, item2)) {
+        flag = true;
+        break;
+      }
+    }
+
+    if (!flag) return false;
+  }
+
+  return true;
+};
+
 /* 设置Array对象扩展的方法不允许遍历 */
 for (let o in Array.prototype) { 
   Object.defineProperty(Array.prototype, o, {

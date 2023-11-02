@@ -80,6 +80,16 @@ const handler = {
     end = DateUtil.dayEnd(end);
     target.addCondition(info[0], Form.LINK.ge, start);
     target.addCondition(info[0], Form.LINK.le, end);
+  },
+  dateBetween(target, info, value){
+    let start = value, end = value;
+    if(value instanceof Array){
+      start = value[0];;
+      end = value[1];
+    }
+    start = DateUtil.dayStart(start);
+    end = DateUtil.dayEnd(end);
+    target.addCondition(info[0], Form.LINK.between, [start, end]);
   }
 }
 
@@ -114,4 +124,5 @@ Form.LINK = Object.freeze({
   in: 'in',
   /**不在这个范围内 */
   notIn: 'notIn',
+  between: 'between',
 });
