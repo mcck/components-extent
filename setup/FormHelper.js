@@ -9,6 +9,10 @@ import { context } from '../index';
  */
 export default class FormHelper{
 
+  options={
+    isValidateForm: true,
+  }
+
   api = {
     context: null,
   }; //Api
@@ -22,14 +26,7 @@ export default class FormHelper{
 
   constructor(options){
     let self = this;
-    self.options = Object.assign({
-      isValidateForm: true,
-    }, options);
-
-    self.api.context = self.options.api;
-    self.api.update = self.options.api.update;
-    self.api.save = self.options.api.save;
-
+    self.setOptions(options)
 
     onMounted(() => {
       let ins = getCurrentInstance();
@@ -44,10 +41,43 @@ export default class FormHelper{
     } else if (this.#watchState == 1) {
       this.form.value = this.#watchPropertyChange(form);
     }
-
     if (hasNotValue(this.options.mode)) {
       this.options.mode = hasNotValue(form.id) ? FormMode.ADD : FormMode.EDIT;
     }
+  }
+
+  setOptions(options){
+    let self = this;
+    self.options = Object.assign(self.options, options);
+
+    if (options.api){
+      self.api.context = options.api;
+      self.api.update = options.api.update;
+      self.api.save = options.api.save;
+    }
+
+    self.validateFormFuncs = toFunctionArray(self.options.validateForm);
+    self.onConfirmBeforeFuncs = toFunctionArray(self.options.onConfirmBefore);
+    self.onAddAfterFuncs = toFunctionArray(self.options.onAddAfter);
+    self.onUpdateAfterFuncs = toFunctionArray(self.options.onUpdateAfter);
+    self.onConfirmAfterFuncs = toFunctionArray(self.options.onConfirmAfter);
+
+  }
+
+  onValidateForm(func) {
+    this.validateFormFuncs.push(func);
+  }
+  onConfirmBefore(func) {
+    this.onConfirmBeforeFuncs.push(func);
+  }
+  onAddAfter(func) {
+    this.onAddAfterFuncs.push(func);
+  }
+  onUpdateAfter(func) {
+    this.onUpdateAfterFuncs.push(func);
+  }
+  onConfirmAfter(func) {
+    this.onConfirmAfterFuncs.push(func);
   }
 
   get hasFormChange(){
@@ -68,6 +98,11 @@ export default class FormHelper{
   handleConfirm(){
     let self = this;
 
+    if (self.options.mode == FormMode.CHECK){
+      console.warn('当前为查看模式');
+      return;
+    }
+
     let config = {
       mode: self.options.mode,
       continue: true, // 是否继续请求
@@ -78,34 +113,81 @@ export default class FormHelper{
 
 
     if (self.options.isValidateForm){
-      if (self.options.validateForm instanceof Function){
-        self.options.validateForm(config).then(res => {
-          if (res) self.#handleConfirm(config);
-        })
-      } else {
-        self.refs.formRef.validate(valid => {
-          if (valid) self.#handleConfirm(config);
-        })
-      }
+      self.#execFunctionCallback(self.validateFormFuncs, config, true).then(conf => {
+        if (conf.continue){
+          if (conf.hasFunc){
+            self.#handleConfirm(config)
+          } else {
+            self.refs.formRef.validate(valid => {
+              if (valid) self.#handleConfirm(config);
+            });
+          }
+        };
+      });
+
     } else {
       self.#handleConfirm(config);
     }
   }
 
-  #handleConfirm(config){
+  #execFunctionCallback(funcs, config = {}, execAll) {
+    if (!(funcs.length)) {
+      config.hasFunc = false;
+      return Promise.resolve(config);
+    }
+
+    config.hasFunc = true;
+    return new Promise((resolve) => {
+      let i = -1;
+      function next() {
+        i += 1;
+        if (i == funcs.length) {
+          resolve(config);
+          return;
+        }
+        let res = funcs[i](config);
+        if (res instanceof Promise) {
+          res.then(conf => {
+            if (conf) Object.assign(config, conf);
+            isNext();
+          });
+        } else if (res) {
+          Object.assign(config, res);
+          isNext();
+        } else {
+          isNext();
+        }
+
+      }
+
+      function isNext() {
+        if (execAll || config.continue) {
+          next();
+        } else {
+          resolve(config);
+        }
+      }
+
+      next();
+    });
+  }
+
+  #handleConfirm(conf){
     let self = this;
-    if (self.options.onConfirmBefore instanceof Function) {
-      self.options.onConfirmBefore(config);
+
+    self.#execFunctionCallback(self.onConfirmBeforeFuncs, conf).then(config => {
+      
       if (config.continue === false) { // 停止请求
         return;
       }
-    }
+  
+      if(config.mode === FormMode.ADD) {
+        self.handleAdd(config);
+      } else if (config.mode === FormMode.EDIT) {
+        self.handleUpdate(config);
+      }
+    });
 
-    if(config.mode === FormMode.ADD) {
-      self.handleAdd(config);
-    } else if (config.mode === FormMode.EDIT) {
-      self.handleUpdate(config);
-    }
   }
 
   handleAdd(config){
@@ -124,8 +206,9 @@ export default class FormHelper{
     self.submitLoading.value = true;
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
-      self.options.onAddAfter && self.options.onAddAfter(res, form, self.emitParams);
-      self.options.onConfirmAfter && self.options.onConfirmAfter(res, form);
+      self.#execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams});
+      self.#execFunctionCallback(self.onConfirmAfterFuncs, { res, form: config.form });
+
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
@@ -154,8 +237,9 @@ export default class FormHelper{
     self.submitLoading.value = true;
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
-      self.options.onAddAfter && self.options.onAddAfter(res, form, self.emitParams);
-      self.options.onConfirmAfter && self.options.onConfirmAfter(res, form);
+      self.#execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams });
+      self.#execFunctionCallback(self.onUpdateAfterFuncs, { res, form: config.form });
+
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
@@ -173,4 +257,24 @@ export default class FormHelper{
     this.refs.formRef && this.refs.formRef.resetFields();
   }
 
+  isAdd(){
+    return this.options.mode == FormMode.ADD;
+  }
+  isEdit(){
+    return this.options.mode == FormMode.EDIT;
+  }
+  isCheck(){
+    return this.options.mode == FormMode.CHECK;
+  }
+}
+
+
+function toFunctionArray(func){
+  if(!func){
+    return [];
+  } else if (func instanceof Function) {
+    return [func];
+  } else if (func instanceof Array) {
+    return func;
+  }
 }

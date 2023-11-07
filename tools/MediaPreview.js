@@ -273,8 +273,32 @@ MediaPreview.prototype.zIndex = function (zIndex) {
   }
   return this.container.style.zIndex;
 };
-MediaPreview.prototype.show = function (index = 0) {
+
+/**
+ * 打开预览窗口
+ * @param {Number | String} src src或下标
+ * @param {Type} type 
+ * @returns 
+ */
+MediaPreview.prototype.show = function (src = 0, type = Type.IMAGE) {
   let self = this;
+  let index = 0;
+
+  if (typeof (src) == 'number'){
+    // 不做操作
+    index = src;
+  } else if (typeof (src) == 'string') {
+    self.setMedia([{src, type}])
+    index = 0;
+  } else {
+    throw new Error('src must be a number or string');
+  }
+  
+  if (index > self.tags?.length){
+    throw new Error('src 错误');
+  }
+
+
   self.viewerCanvas.innerHTML = '';
   self.container.style.display = 'block';
   self.index = index;
@@ -648,10 +672,17 @@ function getOffset(element) {
 //   { type: 'audio', src: require('./test.mp3')},
 // ]);
 // a.show();
+
+const Type = Object.freeze({
+  IMAGE: 'img',
+  VIDEO: 'video',
+  AUDIO: 'audio',
+})
 let previewInstance = new MediaPreview(null, {
   scopeId: 'default'
 });
 MediaPreview.previewInstance = previewInstance;
+MediaPreview.Type = Type
 export {
   previewInstance
 };

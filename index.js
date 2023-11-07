@@ -28,6 +28,7 @@ export { default as FormHelper } from './setup/FormHelper.js';
 
 import Contextmenu from './tools/contextmenu';
 import Constant from './tools/constant';
+export * from './tools/constant';
 
 import Extend from './tools/extend';
 import * as Utils from './tools/utils';
