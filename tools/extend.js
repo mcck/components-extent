@@ -1,4 +1,4 @@
-import { toFixed } from './utils'
+import { toFixed, guid } from './utils'
 // import { DatePicker } from 'element-ui';
 // import {eventBus} from './utils/VueTools.js';
 // import { modules} from './router/module.js';
@@ -17,18 +17,7 @@ if (typeof (window) != 'undefined') {
 /**
  * 生成UUID
  */
-contextThis.guid = function guid(len) {
-  len = len || 8;
-  let x = 'x';
-  for (let i = 0; i < len; i++) {
-    x += 'x';
-  }
-  return x.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0;
-    var v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
+contextThis.guid = guid
 /**
  * 复制到剪切板
  */

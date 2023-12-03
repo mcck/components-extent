@@ -353,7 +353,7 @@ function fileUrl(path) {
 }
 
 
-function base64ToBlob(base64) {
+export function base64ToBlob(base64) {
   const parts = base64.split(";base64,");
   const contentType = parts[0].split(":")[1];
   const raw = window.atob(parts[1]);
@@ -370,6 +370,8 @@ function base64ToBlob(base64) {
 export function getFileSuffix(name){
   return name.substring(name.lastIndexOf('.') + 1)
 }
+
+
 
 export default {
   upload,

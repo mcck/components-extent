@@ -7,10 +7,11 @@ import { context } from '../index';
  * 表单助手
  * 提供提交表单公共方法
  */
-export default class FormHelper{
+export default new Proxy(class FormHelper{
 
   options={
     isValidateForm: true,
+    mode: null
   }
 
   api = {
@@ -33,9 +34,11 @@ export default class FormHelper{
       self.refs = ins.ctx.$refs;
     })
 
+    return false;
+
   }
 
-  setFormData(form){
+  setFormData(form={}){
     if (this.#watchState == 0){
       this.form.value = form;
     } else if (this.#watchState == 1) {
@@ -44,6 +47,8 @@ export default class FormHelper{
     if (hasNotValue(this.options.mode)) {
       this.options.mode = hasNotValue(form.id) ? FormMode.ADD : FormMode.EDIT;
     }
+
+    return this.form;
   }
 
   setOptions(options){
@@ -110,7 +115,6 @@ export default class FormHelper{
       formOptions: {},
       handler: null
     };
-
 
     if (self.options.isValidateForm){
       self.#execFunctionCallback(self.validateFormFuncs, config, true).then(conf => {
@@ -266,7 +270,28 @@ export default class FormHelper{
   isCheck(){
     return this.options.mode == FormMode.CHECK;
   }
-}
+
+  formChange(){
+    this.#hasFormChange.value = true;
+  }
+}, 
+// 代理构造器
+{
+  construct(target, args, proxy){
+    return new Proxy(new target(...args), {
+      get(target, propKey, receiver){
+        let val = target[propKey];
+        if (val instanceof Function){
+          return function(...arg){
+            return val.apply(target, arg);
+          };
+        } else {
+          return val;
+        }
+      }
+    });
+  }
+})
 
 
 function toFunctionArray(func){

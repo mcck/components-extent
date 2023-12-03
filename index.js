@@ -53,7 +53,9 @@ import ScopeDirective from './directive/scope';
 import InfoDesc from './components/info-descriptions/index.js';
 
 export * from './tools/ListUtil';
-
+export {default as MySet} from './entity/MySet.js'
+export { default as MessageChain } from './class/MessageChain.js'
+export { default as RemoteCall } from './class/RemoteCall.js'
 
 export {
   Utils, // 工具

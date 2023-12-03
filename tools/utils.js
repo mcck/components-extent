@@ -201,8 +201,10 @@ export function getPosLen(sdot, edot) {//获取2点距离
 
 
 /**
+ * 获取el节点的值
  * 返回false表示错误
- */
+*/
+// TODO 移除
 export function formatElValue(val) {
   if (typeof (val) == 'string') {
     return val;
@@ -237,13 +239,22 @@ export function attrCount(obj, und) {
  * 去除空字段
  * null，undefined, NaN
  */
-export function deleteEmpty(obj) {
-  if (obj) {
-    var obj_ = {};
-    for (var o in obj) {
-      if (obj[o] != null && obj[o] !== undefined && (typeof (obj[o]) === 'number' ? !isNaN(obj[o]) : true)) {
-        obj_[o] = obj[o];
-      }
+export function deleteInvalidProps(obj, o2) {
+  if (!(obj instanceof Object)){
+    return obj;
+  }
+  var obj_ = { ...obj };
+  for (var o in obj) {
+    if (obj[o] == null || obj[o] == undefined) {
+      delete obj_[o]
+    } else if (typeof (obj[o]) === 'number' && isNaN(obj[o])){
+      delete obj_[o]
+    } else if (obj[o] instanceof Date && isNaN(obj[o])) {
+      delete obj_[o]
+    } else if (o2 == true && obj_[o] == ''){
+      delete obj_[o]
+    } else if (o2 instanceof Function && o2(obj_[o], o)){
+      delete obj_[o]
     }
   }
   return obj_;
@@ -604,3 +615,31 @@ export function taskQueueUtil(taskList, maxConcurrency = 10) {
     })
   })
 }
+
+/**
+ * 获取UUID
+ * @param {Number} len 长度，默认8位
+ * @returns {String}
+ */
+export function guid(len) {
+  len = len || 8;
+  let x = 'x';
+  for (let i = 0; i < len; i++) {
+    x += 'x';
+  }
+  return x.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+/**
+ * 获取UUID
+ * @param {Number} len 长度，默认8位
+ * @returns {String}
+ */
+export function randomNumber(min=0, max=100) {
+  min = Math.ceil(min); // 向上取整，确保是整数
+  max = Math.floor(max); // 向下取整，确保是整数
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};

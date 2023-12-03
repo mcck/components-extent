@@ -8,6 +8,7 @@ import { context } from '../index';
  * 提供公共获取列表，分页，排序，查询，打开窗口等方法
  */
 export default class TableHelper{
+
   api = {
     context: null,
   }; //Api
@@ -33,7 +34,7 @@ export default class TableHelper{
   inferTableHeight = null; // 计算高度方法
   heightOffset = 0;
 
-  refs = {}; // 节点
+  #tableRef = null;
 
 
 
@@ -49,6 +50,7 @@ export default class TableHelper{
     self.api.deleteById = opt.api.deleteById;
 
     self.order = opt.order;
+    self.#tableRef = opt.tableRef;
 
 
     Object.assign(self.queryParams.value, opt.queryParams)
@@ -64,12 +66,28 @@ export default class TableHelper{
 
     onMounted(()=>{
       let ins = getCurrentInstance();
-      self.refs = ins.ctx.$refs;
+      if (!self.#tableRef){
+        self.#tableRef = ins.refs?.tableRef?.$el;
+      }
     })
 
     if (opt.autoGetList){
       self.getTableList();
     }
+
+    // 构造器返回一个代理对象
+    return new Proxy(this, {
+      get(target, propKey, receiver) {
+        let val = target[propKey];
+        if (val instanceof Function) {
+          return function (...arg) {
+            return val.apply(target, arg);
+          };
+        } else {
+          return val;
+        }
+      }
+    });
   }
 
   getTablQueryParams(){
@@ -202,18 +220,12 @@ export default class TableHelper{
         self.tableData.value.removeByAttr({ id: row.id });
         self.onDeleteRowAfter && self.onDeleteRowAfter(row);
       });
-    }).catch((err) => {
-      console.error(err);
-      context.message.alert({
-        message: '删除出错',
-        type: 'error',
-      });
     });
   }
 
 
   updateInferTableHeight(){
-    this.#height.value = inferElementHeight(this.refs.tableRef.$el, this.heightOffset);
+    this.#height.value = inferElementHeight(this.#tableRef, this.heightOffset);
   }
 
   get height(){
