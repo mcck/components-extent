@@ -3,11 +3,12 @@
  */
 export default {
   install(vue) {
-    vue.directive('scope', {
+    vue.directive('scope-id', {
       // 当被绑定的元素挂载到 DOM 中时
-      created(el, binding) {
-        let scopeId = binding.instance.getScopeId();
-        el.scopeId(scopeId, '');
+      created(el, binding, ctx) {
+        debugger
+        let scopeId = ctx.scopeId;
+        el.setAttribute(scopeId, '');
       }
     });
   },

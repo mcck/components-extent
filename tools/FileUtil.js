@@ -371,6 +371,12 @@ export function getFileSuffix(name){
   return name.substring(name.lastIndexOf('.') + 1)
 }
 
+export function getMimeSuffix(mime){
+  if (!mime) return;
+  let arr = mime.split("/");
+  return arr[arr.length-1]
+}
+
 
 
 export default {
@@ -381,5 +387,6 @@ export default {
   parseUnit,
   fileUrl,
   base64ToBlob,
-  getFileSuffix
+  getFileSuffix,
+  getMimeSuffix
 };

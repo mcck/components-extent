@@ -79,6 +79,5 @@ export function collectEvery(arr, compare=v=>!!v){
       return false;
     }
   }
-
   return bool;
 }

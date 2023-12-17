@@ -14,8 +14,10 @@
  * @param {Function} message.alert 成功提示消息
  * @param {Function} message.confirm 确认提示消息
  */
-export const context = {};
-window.context = context;
+
+let contextSymbol = Symbol('COMPONENTS_EXTENT_CONTEXT')
+export const context = window[contextSymbol] = window[contextSymbol] || {};
+
 
 // js
 import ElTableExt from './element/el-table-ext';

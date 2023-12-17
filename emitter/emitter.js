@@ -5,16 +5,19 @@ function E () {
 
 E.prototype = {
   on: function (name, callback, ctx) {
-    var e = this.e || (this.e = {});
+    let self = this;
+    var e = self.e || (self.e = {});
 
     (e[name] || (e[name] = [])).push({
       fn: callback,
       ctx: ctx,
     });
 
-    this._registerAutoDestroy(name, callback, ctx);
+    self._registerAutoDestroy(name, callback, ctx);
 
-    return this;
+    return function off(){
+      self.off(name, callback);
+    };
   },
 
   _registerAutoDestroy(name, callback, ctx, ){

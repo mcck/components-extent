@@ -1,4 +1,4 @@
-import { toFixed, guid } from './utils'
+import { toFixed, guid, hasNotValue } from './utils'
 // import { DatePicker } from 'element-ui';
 // import {eventBus} from './utils/VueTools.js';
 // import { modules} from './router/module.js';
@@ -528,6 +528,15 @@ Number.prototype.toFixed2 = function(num){
 
 JSON.copy = function(val) {
   return JSON.parse(JSON.stringify(val));
+};
+JSON.parse2 = function (text, reviver) {
+  if (hasNotValue(text)){
+    return;
+  } else if (text instanceof Object){
+    return text;
+  }else{
+    return JSON.parse(text, reviver);
+  }
 };
 
 Boolean.parse = function (bool) {

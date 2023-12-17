@@ -6,22 +6,25 @@ import { hasNotValue } from '../tools/utils.js';
 export default class MessageChain {
 
   #getKey = (data) => data['key'];
-  #getValue = (data) => data;
+  #getData = (data) => data;
+  #debug = false;
 
   #chain = {};
 
-  constructor(getKey, getValue){
-    if (getKey instanceof Function){
-      this.#getKey = getKey;
-    } else if (typeof (getKey) == 'string'){
-      this.#getKey = (data) => data[getKey];
+  constructor(options){
+    if (options.getKey instanceof Function){
+      this.#getKey = options.getKey;
+    } else if (typeof (options.getKey) == 'string'){
+      this.#getKey = (data) => data[options.getKey];
     }
 
-    if (getValue instanceof Function){
-      this.#getValue = getValue;
-    } else if (typeof (getValue) == 'string'){
-      this.#getValue = (data) => data[getValue];
+    if (options.getData instanceof Function){
+      this.#getData = options.getData;
+    } else if (typeof (options.getData) == 'string'){
+      this.#getData = (data) => data[options.getData];
     }
+
+    this.#debug = options.debug;
   }
 
   /**
@@ -88,8 +91,11 @@ export default class MessageChain {
       data0 = data.data;
     }
     let self = this;
+    if (this.#debug){
+      console.log('MessageChain debug post', data0)
+    }
     let key = self.#getKey(data0);
-    let data1 = self.#getValue(data0);
+    let data1 = self.#getData(data0);
     let arr = self.#chain[key];
     if (arr) {
       let config = {
