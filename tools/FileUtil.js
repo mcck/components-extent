@@ -31,8 +31,8 @@ import { context } from '../index';
 function upload(object, ops){
   ops = {
     object,
-    fileHashFunction: context.fileHashFunction, // 查询hash
-    uploadFunction: context.uploadFunction, // 上传文件
+    fileHashFunction: context().fileHashFunction, // 查询hash
+    uploadFunction: context().uploadFunction, // 上传文件
     coding: false,
     ...ops
   };
@@ -347,7 +347,7 @@ function parseUnit(size) {
 }
 
 function fileUrl(path) {
-  let basePath = (context.fileUrlPrefix || '').format3();
+  let basePath = (context().fileUrlPrefix || '').format3();
   let url = basePath + '/' + path;
   return url;
 }

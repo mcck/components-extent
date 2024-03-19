@@ -207,13 +207,13 @@ export default class TableHelper{
     let self = this;
 
     // 提示是否确认删除
-    context.message.confirm(self.tips.deleteRow.format3(row), '提示', {
+    context().message.confirm(self.tips.deleteRow.format3(row), '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
       self.api.deleteById.call(self.api.context, row.id, ops).then(() => {
-        context.message.alert({
+        context().message.alert({
           message: '删除成功',
           type: 'success',
         });

@@ -55,7 +55,7 @@ export function hasPermission(auth){
   assert(auth.code, '没有指定权限代码');
 
   let codes = auth.code.split(',');
-  let codeList = context.authCodeList;
+  let codeList = context().authCodeList;
   if (!codeList){
     console.warn("权限代码没有设置");
     return true;

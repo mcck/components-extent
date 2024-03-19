@@ -90,7 +90,7 @@ contextmenu.handerContextmenu(event, menus, 'aaa');
 方式二、
 ```js
 import {context} from 'components-extent';
-context.uploadFunction = function(){}
+context().uploadFunction = function(){}
 ```
 方式三、
 调用时传入

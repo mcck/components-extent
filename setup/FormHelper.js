@@ -11,7 +11,7 @@ export default new Proxy(class FormHelper{
 
   options={
     isValidateForm: true,
-    mode: null
+    mode: FormMode.ADD
   }
 
   api = {
@@ -29,13 +29,14 @@ export default new Proxy(class FormHelper{
     let self = this;
     self.setOptions(options)
 
+    if (hasNotValue(this.options.mode)) {
+      this.options.mode = FormMode.ADD;
+    }
+
     onMounted(() => {
       let ins = getCurrentInstance();
       self.refs = ins.ctx.$refs;
     })
-
-    return false;
-
   }
 
   setFormData(form={}){
@@ -44,6 +45,7 @@ export default new Proxy(class FormHelper{
     } else if (this.#watchState == 1) {
       this.form.value = this.#watchPropertyChange(form);
     }
+    
     if (hasNotValue(this.options.mode)) {
       this.options.mode = hasNotValue(form.id) ? FormMode.ADD : FormMode.EDIT;
     }
@@ -61,11 +63,16 @@ export default new Proxy(class FormHelper{
       self.api.save = options.api.save;
     }
 
+    // 验证
     self.validateFormFuncs = toFunctionArray(self.options.validateForm);
+    // 确认之前
     self.onConfirmBeforeFuncs = toFunctionArray(self.options.onConfirmBefore);
+    // 添加之后
     self.onAddAfterFuncs = toFunctionArray(self.options.onAddAfter);
+    // 更新之后
     self.onUpdateAfterFuncs = toFunctionArray(self.options.onUpdateAfter);
-    self.onConfirmAfterFuncs = toFunctionArray(self.options.onConfirmAfter);
+    // 提交之后
+    self.onSubmitAfterFuncs = toFunctionArray(self.options.onSubmitAfter);
 
   }
 
@@ -81,8 +88,8 @@ export default new Proxy(class FormHelper{
   onUpdateAfter(func) {
     this.onUpdateAfterFuncs.push(func);
   }
-  onConfirmAfter(func) {
-    this.onConfirmAfterFuncs.push(func);
+  onSubmitAfter(func) {
+    this.onSubmitAfterFuncs.push(func);
   }
 
   get hasFormChange(){
@@ -189,6 +196,8 @@ export default new Proxy(class FormHelper{
         self.handleAdd(config);
       } else if (config.mode === FormMode.EDIT) {
         self.handleUpdate(config);
+      } else {
+        throw new Error("必须设置模式")
       }
     });
 
@@ -211,12 +220,12 @@ export default new Proxy(class FormHelper{
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
       self.#execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams});
-      self.#execFunctionCallback(self.onConfirmAfterFuncs, { res, form: config.form });
+      self.#execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
 
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
-      context.message.alert({
+      context().message.alert({
         message: '添加成功',
         type: 'success',
       });
@@ -241,13 +250,13 @@ export default new Proxy(class FormHelper{
     self.submitLoading.value = true;
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
-      self.#execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams });
-      self.#execFunctionCallback(self.onUpdateAfterFuncs, { res, form: config.form });
+      self.#execFunctionCallback(self.onUpdateAfterFuncs, { res, form: config.form, params: self.emitParams });
+      self.#execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
 
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
-      context.message.alert({
+      context().message.alert({
         message: '更新成功',
         type: 'success',
       });

@@ -11,32 +11,32 @@ export default {
     return (this.urlFormat ? this.urlFormat(this.prefix, ops || data) : this.prefix) + uri
   },
   getBaseUrl(){
-    return context.contextPath;
+    return context().contextPath;
   },
   // 查询一条
   one(data, ops) {
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(data, ops, '/one'),
       data
     });
   },
   page(data, ops) {
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(data, ops),
       data
     });
   },
   list(data, ops) {
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(data, ops, '/list'),
       data
     });
   },
   save(data, ops) {
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(data, ops),
       method: 'PUT',
@@ -46,7 +46,7 @@ export default {
   update(data, ops) {
     let id = data._id || data.id;
     delete data._id;
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(data, ops, '/'+id),
       method: 'PUT',
@@ -61,7 +61,7 @@ export default {
     }
   },
   deleteById(id, ops) {
-    return context.axiosInstance({
+    return context().axiosInstance({
       baseURL: this.getBaseUrl(),
       url: this._urlFormat(null, ops, '/'+id),
       method: 'delete',

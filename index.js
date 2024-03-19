@@ -16,7 +16,10 @@
  */
 
 let contextSymbol = Symbol('COMPONENTS_EXTENT_CONTEXT')
-export const context = window[contextSymbol] = window[contextSymbol] || {};
+window[contextSymbol] = window[contextSymbol] || {};
+export function context(){
+  return window[contextSymbol]
+}
 
 
 // js
@@ -42,6 +45,7 @@ import { emitterInstall } from './emitter'
 import { init as HistoryStateMangeInit } from './tools/HistoryStateMange'
 import ThreadPool from './tools/ThreadPool';
 import MaxFileUploader from './tools/MaxFileUploader';
+export * from './tools/storage.js'
 
 import TemplateApi from './api/template.api'
 
@@ -82,7 +86,7 @@ export default {
    * @param {Object} params 上下文参数
    */
   install(vue, params) {
-    Object.assign(context, params);
+    Object.assign(window[contextSymbol], params);
     vue.use(Extend);
 
     // 安装指令
