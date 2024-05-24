@@ -540,11 +540,16 @@ JSON.parse2 = function (text, reviver) {
 };
 
 Boolean.parse = function (bool) {
-  try {
-    return Boolean(eval(bool));
-  } catch (e) {
-    return false;
+  if (typeof (bool) == 'boolean'){
+    return bool;
   }
+  if (bool == 'true'){
+    return true;
+  }
+  if (bool == 1){
+    return true;
+  }
+  return false;
 }
 
 
