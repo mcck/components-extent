@@ -39,6 +39,9 @@ import Extend from './tools/extend';
 import * as Utils from './tools/utils';
 import FileUtil from './tools/FileUtil';
 import DateUtil from './tools/DateUtil';
+export * from "./tools/ListUtil";
+import * as ListUtil from "./tools/ListUtil";
+
 import MediaPreview from './tools/MediaPreview';
 import emitter from './emitter'
 import { emitterInstall } from './emitter'
@@ -58,13 +61,14 @@ import ScopeDirective from './directive/scope';
 
 import InfoDesc from './components/info-descriptions/index.js';
 
-export * from './tools/ListUtil';
+
 export {default as MySet} from './entity/MySet.js'
 export { default as MessageChain } from './class/MessageChain.js'
 export { default as RemoteCall } from './class/RemoteCall.js'
 
 export {
   Utils, // 工具
+  ListUtil,
   ElTableExt, // 表格扩展
   ElFormExt, // 表单扩展
   Contextmenu, // 右键菜单

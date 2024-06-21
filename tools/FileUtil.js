@@ -1,5 +1,4 @@
 // 文件管理
-import md5 from 'js-md5';
 import {isType} from './utils';
 // FileApi 必须拥有upload方法
 import { context } from '../index';
@@ -11,7 +10,7 @@ import { context } from '../index';
  * @param {Object} ops {
  *   coding {Boolean} 是否开启编码秒传
  *   groupId {String} 文件组
- *   fileHashFunction {Funciton} 查询hash的方法
+ *   queryFileHashFunction {Funciton} 查询hash的方法
  *   uploadFunction {Funciton} 上传文件的方法
  *   data {Object} 附加body参数
  *   params {Object} 该参数会被传入 uploadFunction 方法
@@ -31,10 +30,11 @@ import { context } from '../index';
 function upload(object, ops){
   ops = {
     object,
-    fileHashFunction: context().fileHashFunction, // 查询hash
+    queryFileHashFunction: context().queryFileHashFunction, // 查询hash
+    getFileHash: context().getFileHash,
     uploadFunction: context().uploadFunction, // 上传文件
     coding: false,
-    ...ops
+    ...ops,
   };
   ops.groupId = ops.groupId || guid();
 
@@ -173,9 +173,18 @@ function fileCoding(file) {
   return new Promise((resolve) => {
     let r = new FileReader();
     r.onload = function () {
-      let hash = md5(r.result);
-      file.hash = hash;
-      resolve(hash, r);
+      let hash = getFileHash(r.result);
+      if (hash instanceof Promise) {
+        hash.then(res=>{
+          file.hash = res;
+          resolve(file.hash, r);
+        });
+      } else {
+        file.hash = hash;
+        resolve(file.hash, r);
+      }
+      
+      
     };
     r.readAsArrayBuffer(file);
   });

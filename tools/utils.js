@@ -320,55 +320,6 @@ export function parseToURL (urlStr) {
 }
 
 /**
- * tree类型转list
- * @param {Array} tree 树列表
- * @param {String} childrenKey 子项字段
- * @returns {Array} list
- */
-export function TreeToList(tree = [], childrenKey='children', parent){
-  let arr = [];
-  tree.forEach(item => {
-    arr.push({ ...item, [childrenKey]: null });
-    let child = item[childrenKey];
-    if (child && child.length) {
-      let res = TreeToList(child, childrenKey, item);
-      arr = arr.concat(res);
-    }
-    item.parent = parent;
-  });
-  return arr;
-}
-/**
- * list转tree
- * @param {Array} list 
- * @param {Object} opt 
- * @returns 
- */
-export function ListToTree(list = [], option) {
-  let opt = Object.assign({
-    key: 'id',
-    parentKey: 'parentId',
-    childrenKey: 'children'
-  }, option);
-  if (opt.clone) {
-    for (let i=0, len=list.length; i<len; i++){
-      list[i] = { ...list[i] }
-    }
-  }
-  let top = [];
-  list.forEach(item=>{
-    // 查找父级
-    let parent = list.find(it=>it[opt.key] == item[opt.parentKey]);
-    if (parent){
-      parent[opt.childrenKey] = parent[opt.childrenKey] || [];
-      parent[opt.childrenKey].push(item);
-    } else {
-      top.push(item);
-    }
-  });
-  return top;
-}
-/**
  * 比较两个对象的属性是否相等
  * @param {Object} o1 
  * @param {Object} o2 
@@ -642,4 +593,19 @@ export function randomNumber(min=0, max=100) {
   min = Math.ceil(min); // 向上取整，确保是整数
   max = Math.floor(max); // 向下取整，确保是整数
   return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+
+export function objectFieldMatch(src, match, fn) {
+  fn = fn || function (key, srcVal, matchVal) {
+    return srcVal !== matchVal;
+  };
+
+  for (let o in match) {
+    if (fn(o, src[o], match[o])) {
+      return false;
+    }
+  }
+
+  return true;
 };
