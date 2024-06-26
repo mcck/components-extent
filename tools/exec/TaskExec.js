@@ -9,7 +9,7 @@
  *  interval: 间隔多久一次
  * }
  */
-export default function retry(fn, options) {
+export function taskRetry(fn, options) {
   if (typeof options == 'number') {
     options = { maxCount: options }
   }
@@ -39,4 +39,28 @@ export default function retry(fn, options) {
       }
     }
   })
+}
+
+/**
+ * 任务分片执行，利用没一帧的剩余时间执行任务
+ * @param {Array} list 数据
+ * @param {Function} taskHandler 需要执行的任务
+ * @param {Number} surplus 最少剩余时间（毫秒）
+ */
+export function taskPerformChunk(list, taskHandler, surplus=0) {
+  let i = 0;
+  function _run() {
+    if (i >= list.length) return;
+
+    requestIdleCallback((idle) => {
+      while (idle.timeRemaining() > surplus && i < list.length) {
+        taskHandler(list[i], i);
+        i++;
+      }
+
+      _run();
+    });
+  }
+
+  _run();
 }

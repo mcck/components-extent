@@ -46,9 +46,10 @@ import MediaPreview from './tools/MediaPreview';
 import emitter from './emitter'
 import { emitterInstall } from './emitter'
 import { init as HistoryStateMangeInit } from './tools/HistoryStateMange'
-import ThreadPool from './tools/ThreadPool';
 import MaxFileUploader from './tools/MaxFileUploader';
+import ThreadPool from './tools/exec/ThreadPool.js';
 export * from './tools/storage.js'
+export * from "./tools/exec/TaskExec.js";
 
 import TemplateApi from './api/template.api'
 

@@ -1,6 +1,6 @@
 // 大文件上传工具
-import retry from './retry.js'
-import ThreadPool from './ThreadPool.js'
+import {taskRetry} from './exec/TaskExec.js'
+import ThreadPool from './exec/ThreadPool.js'
 import { deepMerge, taskQueueUtil } from './utils'
 
 /**
@@ -400,24 +400,30 @@ export default class MaxFileUploader{
     let self = this
     self.#progress('tips', '文件合并中')
     console.log(self)
-    retry(function (ok, fail){
-      if (MaxFileUploader.CANCEL == self.status) return
-      self.#config.axios({
-        ...self.#config.resultRequest,
-        url: self.#config.url + '/' + self.#groupId,
-      }).then(res => {
-        if(res.data.code == 2){
-          ok()
-          self.#progress(MaxFileUploader.COMPLETE, '上传完成', res)
-        }else{
-          fail()
-        }
-      }).catch(err => {
-        fail()
-      })
-    },{maxCount: Number.MAX_VALUE, interval: 10000}).catch((e)=>{
-      console.log(e)
-    })
+    taskRetry(
+      function (ok, fail) {
+        if (MaxFileUploader.CANCEL == self.status) return;
+        self.#config
+          .axios({
+            ...self.#config.resultRequest,
+            url: self.#config.url + "/" + self.#groupId,
+          })
+          .then((res) => {
+            if (res.data.code == 2) {
+              ok();
+              self.#progress(MaxFileUploader.COMPLETE, "上传完成", res);
+            } else {
+              fail();
+            }
+          })
+          .catch((err) => {
+            fail();
+          });
+      },
+      { maxCount: Number.MAX_VALUE, interval: 10000 }
+    ).catch((e) => {
+      console.log(e);
+    });
     
   }
 
