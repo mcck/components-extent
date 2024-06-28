@@ -17,7 +17,10 @@
 
 let contextSymbol = Symbol('COMPONENTS_EXTENT_CONTEXT')
 window[contextSymbol] = window[contextSymbol] || {};
-export function context(){
+export function context(option){
+  if (option){
+    Object.assign(window[contextSymbol], option);
+  }
   return window[contextSymbol]
 }
 
@@ -29,7 +32,7 @@ import ElFormExt from './element/form-ext';
 export {default as TableHelper} from './setup/TableHelper.js';
 export { default as FormHelper } from './setup/FormHelper.js';
 
-
+import './tools/ConsoleExtend.js';
 
 import Contextmenu from './tools/contextmenu';
 import Constant from './tools/constant';
@@ -55,6 +58,7 @@ import TemplateApi from './api/template.api'
 
 
 import PermissionDirective from './directive/permission-directive.js';
+export * from './directive/permission-directive.js';
 import TipsDirective from './directive/tips.js';
 import DraggableDirective from './directive/draggable.js';
 import ScopeDirective from './directive/scope';

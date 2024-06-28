@@ -1,3 +1,5 @@
+import { context } from '../index.js'
+
 /**
  * form页面通用方法
  */
@@ -160,7 +162,8 @@ export function newInstance() {
             self.visible = false;
           }
           self.hasFormChange = false;
-          self.$success('添加成功');
+          
+          context().message.success('添加成功');
         }).finally(() => {
           self.submitLoading = false;
         });
@@ -197,7 +200,7 @@ export function newInstance() {
             self.visible = false;
           }
           self.hasFormChange = false;
-          self.$success(self.formTips.updateTip || '修改成功');
+          context().message.success(self.formTips.updateTip || '修改成功');
         }).finally(() => {
           self.submitLoading = false;
         });

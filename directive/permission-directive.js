@@ -122,8 +122,6 @@ export default {
     vue.config.globalProperties.$hasPermission = hasPermission;
     
   },
-  hasPermission,
-  permission
 };
 
 function assert(obj, msg) {
