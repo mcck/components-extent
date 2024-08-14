@@ -609,3 +609,31 @@ export function objectFieldMatch(src, match, fn) {
 
   return true;
 };
+/**
+ * 分片执行任务
+ * @param {Array} list 执行任务的数据
+ * @param {Function} taskHandler 处理函数
+ * @param {Function} end 结束回调
+ */
+export function performChunk(list, taskHandler, end) {
+  let i = 0;
+  function _run() {
+    if (i >= list.length) {
+      if (end instanceof Function){
+        end();
+      }
+      return;
+    }
+
+    requestIdleCallback((idle) => {
+      while (idle.timeRemaining() > 2 && i < list.length) {
+        taskHandler(list[i], i);
+        i++;
+      }
+
+      _run();
+    });
+  }
+
+  _run();
+}

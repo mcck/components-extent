@@ -32,7 +32,7 @@ import ElFormExt from './element/form-ext';
 export {default as TableHelper} from './setup/TableHelper.js';
 export { default as FormHelper } from './setup/FormHelper.js';
 
-import './tools/ConsoleExtend.js';
+// import './tools/ConsoleExtend.js';
 
 import Contextmenu from './tools/contextmenu';
 import Constant from './tools/constant';

@@ -1,5 +1,11 @@
-import Emitter from './emitter.js';
-var emitter = new Emitter();
+var emitter = new MessageChain({
+  registerHandler(config, remove){
+    if (config.vue){
+      let bum = config.vue.bum = config.vue.bum || [];
+      bum.push(remove);
+    }
+  }
+});
 
 export default emitter;
 

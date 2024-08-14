@@ -291,36 +291,53 @@ function _imageCompress(blob, quality) {
 /**
  * 选择文件，默认直接上传
  */
-function selectFile(ops = {}) {
+function selectFileUpload(ops) {
+  return selectFile(ops).then(files => {
+    return upload(files, ops).then(res => {
+      resolve({ res, input });
+    });
+  })
+}
+/**
+ * 选择文件
+ * @param {Object} ops 
+ * @returns {Promise} 文件对象
+ */
+function selectFile(options) {
+  let ops = {
+    accept: '*', // 文件类型
+    multiple: false, // 是否多选
+    fizeSize: null, // 文件大小限制
+    ...options
+  };
   let input = document.createElement('input');
   input.type = 'file';
   input.accept = ops.accept;
   input.multiple = ops.multiple;
-  if (ops.onchange instanceof Function) {
-    input.onchange = ops.onchange;
-    input.click();
-  } else {
-    input.click();
-    return new Promise((resolve, reject) => {
-      input.onchange = function () {
-        if (!input.value) {
-          return;
-        }
+
+  input.click();
+  return new Promise((resolve, reject) => {
+    input.onchange = function () {
+      if (!input.value) {
+        reject(new Error('没有选择文件'));
+        return;
+      }
+
+      if (ops.fizeSize){
         let fileSize = parseUnit(ops.fizeSize);
         for (let i = 0; i < input.files.length; i++) {
           let file = input.files[i];
           if (fileSize && fileSize < file.size) {
-            reject('文件最大只支持' + formatUnit(ops.fizeSize) + '，当前文件' + formatUnit(file.size));
+            reject(new Error('文件最大只支持' + formatUnit(ops.fizeSize) + '，当前文件' + formatUnit(file.size)));
             return;
           }
         }
-        upload(input, ops).then(res=>{
-          resolve({res, input});
-        }).catch(reject);
-      };
-    });
-  }
+      }
+      resolve(input.files);
+    };
+  });
 }
+
 
 /**
  * 格式单位
@@ -391,6 +408,7 @@ export function getMimeSuffix(mime){
 export default {
   upload,
   selectFile,
+  selectFileUpload,
   imageCompress,
   formatUnit,
   parseUnit,
