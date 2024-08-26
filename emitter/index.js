@@ -1,3 +1,5 @@
+import MessageChain from '../class/MessageChain.js'
+
 var emitter = new MessageChain({
   registerHandler(config, remove){
     if (config.vue){

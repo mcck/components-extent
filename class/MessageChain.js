@@ -1,4 +1,4 @@
-import Utils from '../tools/utils.js';
+import { hasNotValue } from '../tools/utils.js';
 
 /**
  * 消息处理链
@@ -25,6 +25,13 @@ export default class MessageChain {
     }
   }
 
+  get debug() {
+    return this.#debug;
+  }
+  get chain() {
+    return { ...this.#chain };
+  }
+
   /**
    * 监听数据
    * @param {Object} conf 消息标识配置
@@ -49,7 +56,7 @@ export default class MessageChain {
     chain.sort((a, b) => a.sort - b.sort);
 
     function remove() {
-      self.off(config, handler);
+      self.off(conf, handler);
     }
 
     self.#registerHandler(config, remove);
@@ -73,7 +80,7 @@ export default class MessageChain {
   #getConfig(conf, handler) {
     let self = this;
     if (!(handler instanceof Function)) throw new Error('handler 必须是Function');
-    if (Utils.hasNotValue(conf)) throw new Error('key is required');
+    if (hasNotValue(conf)) throw new Error('key is required');
 
     let config = {};
     if (typeof (conf) == 'object') {
@@ -84,7 +91,7 @@ export default class MessageChain {
     }
     config.key = self.#keySerialize({ ...config });
 
-    if (Utils.hasNotValue(config.key)) throw new Error('conf.key is required');
+    if (hasNotValue(config.key)) throw new Error('conf.key is required');
 
     return config;
   }

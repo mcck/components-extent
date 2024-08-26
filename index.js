@@ -15,7 +15,7 @@
  * @param {Function} message.confirm 确认提示消息
  */
 
-let contextSymbol = Symbol('COMPONENTS_EXTENT_CONTEXT')
+let contextSymbol = btoa('COMPONENTS_EXTENT_CONTEXT').replaceAll('=', '')
 window[contextSymbol] = window[contextSymbol] || {};
 export function context(option){
   if (option){

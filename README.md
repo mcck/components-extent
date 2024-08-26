@@ -103,7 +103,7 @@ FileUtil.upload(file, {uploadFunction: Function});
 ```js
 import {emitter} from 'components-extent';
 
-emitter.emit('xxx', 123);
+emitter.post('xxx', 123);
 emitter.on('xxx', Function);
 ```
 
