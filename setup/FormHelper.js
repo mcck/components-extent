@@ -20,8 +20,8 @@ export default new Proxy(class FormHelper{
 
   form = ref({}); // 编辑的对象
   submitLoading = ref(false);
-  #watchState = 0;
-  #hasFormChange = ref(false);
+  _watchState = 0;
+  _hasFormChange = ref(false);
 
   refs = {}; // 节点
 
@@ -40,10 +40,10 @@ export default new Proxy(class FormHelper{
   }
 
   setFormData(form={}){
-    if (this.#watchState == 0){
+    if (this._watchState == 0){
       this.form.value = form;
-    } else if (this.#watchState == 1) {
-      this.form.value = this.#watchPropertyChange(form);
+    } else if (this._watchState == 1) {
+      this.form.value = this._watchPropertyChange(form);
     }
     
     if (hasNotValue(this.options.mode)) {
@@ -93,15 +93,15 @@ export default new Proxy(class FormHelper{
   }
 
   get hasFormChange(){
-    this.#watchState = 1;
-    return this.#hasFormChange;
+    this._watchState = 1;
+    return this._hasFormChange;
   }
-  #watchPropertyChange(obj = {}) {
+  _watchPropertyChange(obj = {}) {
     let self = this;
-    self.#hasFormChange.value = false;
+    self._hasFormChange.value = false;
     return new Proxy(obj, {
       set(target, key, value, receiver) {
-        self.#hasFormChange.value = true;
+        self._hasFormChange.value = true;
         return Reflect.set(target, key, value, receiver);
       },
     });
@@ -124,24 +124,24 @@ export default new Proxy(class FormHelper{
     };
 
     if (self.options.isValidateForm){
-      self.#execFunctionCallback(self.validateFormFuncs, config, true).then(conf => {
+      self._execFunctionCallback(self.validateFormFuncs, config, true).then(conf => {
         if (conf.continue){
           if (conf.hasFunc){
-            self.#handleConfirm(config)
+            self._handleConfirm(config)
           } else {
             self.refs.formRef.validate(valid => {
-              if (valid) self.#handleConfirm(config);
+              if (valid) self._handleConfirm(config);
             });
           }
         };
       });
 
     } else {
-      self.#handleConfirm(config);
+      self._handleConfirm(config);
     }
   }
 
-  #execFunctionCallback(funcs, config = {}, execAll) {
+  _execFunctionCallback(funcs, config = {}, execAll) {
     if (!(funcs.length)) {
       config.hasFunc = false;
       return Promise.resolve(config);
@@ -183,10 +183,10 @@ export default new Proxy(class FormHelper{
     });
   }
 
-  #handleConfirm(conf){
+  _handleConfirm(conf){
     let self = this;
 
-    self.#execFunctionCallback(self.onConfirmBeforeFuncs, conf).then(config => {
+    self._execFunctionCallback(self.onConfirmBeforeFuncs, conf).then(config => {
       
       if (config.continue === false) { // 停止请求
         return;
@@ -219,8 +219,8 @@ export default new Proxy(class FormHelper{
     self.submitLoading.value = true;
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
-      self.#execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams});
-      self.#execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
+      self._execFunctionCallback(self.onAddAfterFuncs, { res, form: config.form, params: self.emitParams});
+      self._execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
 
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
@@ -250,8 +250,8 @@ export default new Proxy(class FormHelper{
     self.submitLoading.value = true;
 
     handler.call(self.api.context, config.form, config.formOptions).then(res => {
-      self.#execFunctionCallback(self.onUpdateAfterFuncs, { res, form: config.form, params: self.emitParams });
-      self.#execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
+      self._execFunctionCallback(self.onUpdateAfterFuncs, { res, form: config.form, params: self.emitParams });
+      self._execFunctionCallback(self.onSubmitAfterFuncs, { res, form: config.form });
 
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
@@ -281,7 +281,7 @@ export default new Proxy(class FormHelper{
   }
 
   formChange(){
-    this.#hasFormChange.value = true;
+    this._hasFormChange.value = true;
   }
 }, 
 // 代理构造器

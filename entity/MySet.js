@@ -10,7 +10,7 @@ export default class MySet extends Array{
     }
   }
 
-  #comparer = function(o1, o2){
+  _comparer = function(o1, o2){
     return o1 == o2;
   }
 
@@ -18,7 +18,7 @@ export default class MySet extends Array{
     if (!(fn instanceof Function)){
       throw new Error('Comparer must be a function');
     }
-    this.#comparer = fn;
+    this._comparer = fn;
     return;
   }
 
@@ -33,7 +33,7 @@ export default class MySet extends Array{
 
   includes(searchElement, fromlndex=0){
     for (let i = fromlndex; i < this.length; i++){
-      if (this.#comparer(this[i], searchElement)){
+      if (this._comparer(this[i], searchElement)){
         return true;
       }
     }

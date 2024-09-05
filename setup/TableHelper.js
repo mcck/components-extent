@@ -20,8 +20,8 @@ export default class TableHelper{
     pageNum: 1,
     pageSize: 10
   })
-  #computeInferHeight = false;
-  #height = shallowRef(300); // 表格高度
+  _computeInferHeight = false;
+  _height = shallowRef(300); // 表格高度
   loading = shallowRef(false); // 等待加在
   tableData = ref([]);// 表格数据
   rowContextmenu = []; // 右键菜单
@@ -34,7 +34,7 @@ export default class TableHelper{
   inferTableHeight = null; // 计算高度方法
   heightOffset = 0;
 
-  #tableRef = null;
+  _tableRef = null;
 
 
 
@@ -50,7 +50,7 @@ export default class TableHelper{
     self.api.deleteById = opt.api.deleteById;
 
     self.order = opt.order;
-    self.#tableRef = opt.tableRef;
+    self._tableRef = opt.tableRef;
 
 
     Object.assign(self.queryParams.value, opt.queryParams)
@@ -66,8 +66,8 @@ export default class TableHelper{
 
     onMounted(()=>{
       let ins = getCurrentInstance();
-      if (!self.#tableRef){
-        self.#tableRef = ins.refs?.tableRef?.$el;
+      if (!self._tableRef){
+        self._tableRef = ins.refs?.tableRef?.$el;
       }
     })
 
@@ -163,7 +163,7 @@ export default class TableHelper{
       self.tableData.value = res.records
       page.total = parseInt(res.total);
 
-      if(self.#computeInferHeight){
+      if(self._computeInferHeight){
         self.updateInferTableHeight();
       }
 
@@ -225,15 +225,15 @@ export default class TableHelper{
 
 
   updateInferTableHeight(){
-    this.#height.value = inferElementHeight(this.#tableRef, this.heightOffset);
+    this._height.value = inferElementHeight(this._tableRef, this.heightOffset);
   }
 
   get height(){
-    this.#computeInferHeight = true;
-    return this.#height;
+    this._computeInferHeight = true;
+    return this._height;
   }
   set height(val){
-    this.#height = val;
+    this._height = val;
   }
 
 }

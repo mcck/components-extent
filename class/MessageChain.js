@@ -5,31 +5,31 @@ import { hasNotValue } from '../tools/utils.js';
  */
 export default class MessageChain {
 
-  #debug = false;
-  #chain = {};
-  #keySerialize = (key) => {
+  _debug = false;
+  _chain = {};
+  _keySerialize = (key) => {
     return typeof (key) == 'object' ? key.key : key;
   };
 
-  #registerHandler = ()=>{};
+  _registerHandler = ()=>{};
 
   constructor(options = {}) {
-    this.#debug = options.debug;
+    this._debug = options.debug;
 
     if (options.keySerialize) {
-      this.#keySerialize = options.keySerialize;
+      this._keySerialize = options.keySerialize;
     }
 
     if (options.registerHandler instanceof Function) {
-      this.#registerHandler = options.registerHandler;
+      this._registerHandler = options.registerHandler;
     }
   }
 
   get debug() {
-    return this.#debug;
+    return this._debug;
   }
   get chain() {
-    return { ...this.#chain };
+    return { ...this._chain };
   }
 
   /**
@@ -42,11 +42,11 @@ export default class MessageChain {
    */
   on(conf, handler) {
     let self = this;
-    let config = self.#getConfig(conf, handler);
+    let config = self._getConfig(conf, handler);
 
-    let chain = self.#chain[config.key];
+    let chain = self._chain[config.key];
     if (!chain) {
-      chain = self.#chain[config.key] = [];
+      chain = self._chain[config.key] = [];
     }
 
     config.sort = config.sort || chain.length;
@@ -59,7 +59,7 @@ export default class MessageChain {
       self.off(conf, handler);
     }
 
-    self.#registerHandler(config, remove);
+    self._registerHandler(config, remove);
 
     return remove;
 
@@ -77,7 +77,7 @@ export default class MessageChain {
     return this.on(conf, handler);
   }
 
-  #getConfig(conf, handler) {
+  _getConfig(conf, handler) {
     let self = this;
     if (!(handler instanceof Function)) throw new Error('handler 必须是Function');
     if (hasNotValue(conf)) throw new Error('key is required');
@@ -89,7 +89,7 @@ export default class MessageChain {
       config.key = conf;
       config.handler = handler;
     }
-    config.key = self.#keySerialize({ ...config });
+    config.key = self._keySerialize({ ...config });
 
     if (hasNotValue(config.key)) throw new Error('conf.key is required');
 
@@ -102,9 +102,9 @@ export default class MessageChain {
   off(conf, handler) {
 
     let self = this;
-    let config = self.#getConfig(conf, handler);
+    let config = self._getConfig(conf, handler);
 
-    let arr = self.#chain[config.key];
+    let arr = self._chain[config.key];
     if (arr) {
       // 移除执行方法
       let index = arr.findIndex(item => item.handler == handler);
@@ -119,14 +119,14 @@ export default class MessageChain {
    */
   post(key, data) {
     let self = this;
-    if (this.#debug) {
+    if (this._debug) {
       console.log('MessageChain debug post', data)
     }
 
     return new Promise((resolve, reject) => {
-      key = self.#keySerialize(key);
+      key = self._keySerialize(key);
 
-      let chain = self.#chain[key];
+      let chain = self._chain[key];
       if (!chain?.length) {
         resolve(data);
         return;
@@ -166,7 +166,7 @@ export default class MessageChain {
    * 销毁
    */
   destroy() {
-    this.#chain = {};
+    this._chain = {};
   }
 
 }

@@ -49,7 +49,7 @@ export default class MaxFileUploader{
   __v_skip = true; // 设置vue跳过代理
 
   // 配置
-  #config = {
+  _config = {
     /**分片大小10M */
     chunkSize: 20971520,
     /**100M才开始分割 */
@@ -79,22 +79,22 @@ export default class MaxFileUploader{
     threadPool: null // 线程池，默认自动创建
   };
 
-  #progressCallback; // 进度
-  #thenCallback; // 完成回调方法
-  #catchCallback; // 完成回调方法
-  #finallyCallback; // 完成回调方法
-  #reserveCallback; // 不需要分片时回调
+  _progressCallback; // 进度
+  _thenCallback; // 完成回调方法
+  _catchCallback; // 完成回调方法
+  _finallyCallback; // 完成回调方法
+  _reserveCallback; // 不需要分片时回调
 
-  #blob; // 文件对象
-  #filename; // 文件名
-  #groupId; // 组ID
+  _blob; // 文件对象
+  _filename; // 文件名
+  _groupId; // 组ID
 
-  #chunks = []; // {Array[Object]} 分片对象列表
-  #retryChunks = [];
+  _chunks = []; // {Array[Object]} 分片对象列表
+  _retryChunks = [];
   
-  #taskTotal = 0; // 总任务数
-  #completeTaskCount = 0; // 完成次数
-  #execTaskCount = 0; // 执行次数
+  _taskTotal = 0; // 总任务数
+  _completeTaskCount = 0; // 完成次数
+  _execTaskCount = 0; // 执行次数
 
 
   status = MaxFileUploader.INIT
@@ -106,7 +106,7 @@ export default class MaxFileUploader{
       let md5Url = config.md5Url
       delete config.params
       delete config.md5Url
-      let conf = self.#config = deepMerge(self.#config, config)
+      let conf = self._config = deepMerge(self._config, config)
 
       if (!conf.url) {
         throw new Error('config.url是必须的')
@@ -134,7 +134,7 @@ export default class MaxFileUploader{
         importScripts(md5Url)
       }, md5Url.href)
     } catch(e){
-      self.#progress(MaxFileUploader.FAIL, '初始化错误', e)
+      self._progress(MaxFileUploader.FAIL, '初始化错误', e)
       throw e
     }
   }
@@ -149,48 +149,48 @@ export default class MaxFileUploader{
       if (!(blob instanceof Blob)) {
         throw new Error('文件必须是Blob类型')
       }
-      self.#blob = blob
-      self.#filename = filename || blob.name
+      self._blob = blob
+      self._filename = filename || blob.name
 
       // 计算总任务数
-      self.#calculateTotal()
-      if (self.#taskTotal == 0) {
+      self._calculateTotal()
+      if (self._taskTotal == 0) {
         // 不需要分片，使用 reserve 方法
-        self.#reserveCallback && self.#reserveCallback(blob)
-        self.#_handlerFinally()
+        self._reserveCallback && self._reserveCallback(blob)
+        self.__handlerFinally()
         return
       }
 
       // 开始分片
-      self.#slicing()
+      self._slicing()
     } catch(e){
-      self.#progress(MaxFileUploader.FAIL, '运行时错误', e)
+      self._progress(MaxFileUploader.FAIL, '运行时错误', e)
       throw e
     }
     return self
   }
 
-  #calculateTotal(){
+  _calculateTotal(){
     let self = this
-    if (self.#blob.size <= self.#config.thresholdSize) {
+    if (self._blob.size <= self._config.thresholdSize) {
       // 不需要分片，结束
       return
     }
 
     // 分片总数
-    self.#taskTotal = Math.ceil(self.#blob.size / self.#config.chunkSize)
+    self._taskTotal = Math.ceil(self._blob.size / self._config.chunkSize)
 
     // 分片数和上传数一样，再加最后一次合并
-    self.#taskTotal = self.#taskTotal * 2 + 1
+    self._taskTotal = self._taskTotal * 2 + 1
   }
   
 
-  #slicing() {
+  _slicing() {
     let self = this
-    self.#progress('tips', '开始分割文件')
+    self._progress('tips', '开始分割文件')
     // 开始拆分
-    let blob = self.#blob
-    let conf = self.#config
+    let blob = self._blob
+    let conf = self._config
     let chunkSize = conf.chunkSize
     let index = 0
     let promises = []
@@ -198,7 +198,7 @@ export default class MaxFileUploader{
 
     // 指定长度并使用0填充
     let len = Math.ceil(blob.size / chunkSize)
-    self.#chunks = Array.from({ length: len }, () => 0)
+    self._chunks = Array.from({ length: len }, () => 0)
 
     while (index < len) {
       // 提交到线城池中执行
@@ -222,27 +222,27 @@ export default class MaxFileUploader{
         r.readAsArrayBuffer(chunk)
       }, blob, index++, chunkSize).then(({ out }) => {
         out.chunk.hash = out.hash
-        self.#chunks[out.index] = out.chunk
-        self.#progress(MaxFileUploader.SLICING, '分割文件中')
+        self._chunks[out.index] = out.chunk
+        self._progress(MaxFileUploader.SLICING, '分割文件中')
       })
       promises.push(promise)
     }
 
     Promise.all(promises).then(() => {
       // TODO 进行检查是否有未完成的
-      self.#createTask()
+      self._createTask()
     })
   }
   
-  // #slicing(){
+  // _slicing(){
   //   let self = this
   //   console.time()
-  //   self.#progress('tips', '开始分割文件')
+  //   self._progress('tips', '开始分割文件')
 
   //   // 开始拆分
-  //   let blob = self.#blob
+  //   let blob = self._blob
   //   let fileSize = blob.size
-  //   let chunkSize = self.#config.chunkSize
+  //   let chunkSize = self._config.chunkSize
   //   let offset = 0
   //   let promises = []
   //   while (offset < fileSize) {
@@ -254,70 +254,70 @@ export default class MaxFileUploader{
   //       r.onload = function () {
   //         // let hash = md5(r.result)
   //         // chunk.hash = hash
-  //         self.#progress(MaxFileUploader.SLICING, '分割文件中', chunk)
+  //         self._progress(MaxFileUploader.SLICING, '分割文件中', chunk)
   //         resolve(chunk)
   //       }
   //       r.readAsArrayBuffer(chunk)
   //     }))
 
-  //     self.#chunks.push(chunk)
+  //     self._chunks.push(chunk)
   //     offset += chunkSize
   //   }
 
   //   Promise.all(promises).then(()=>{
-  //     // self.#createTask()
+  //     // self._createTask()
 
   //     console.timeEnd()
   //   })
   // }
 
-  #createTask(){
+  _createTask(){
     let self = this
     if (MaxFileUploader.CANCEL == self.status) return
-    self.#progress('tips', '创建上传任务')
-    self.#config.axios({
-      ...self.#config.startRequest,
-      url: self.#config.url,
+    self._progress('tips', '创建上传任务')
+    self._config.axios({
+      ...self._config.startRequest,
+      url: self._config.url,
       data: {
-        fileName: self.#filename,
-        count: self.#chunks.length,
-        hashs: self.#chunks.map(it=>it.hash),
+        fileName: self._filename,
+        count: self._chunks.length,
+        hashs: self._chunks.map(it=>it.hash),
       }
     }).then(res=>{
       if (MaxFileUploader.CANCEL == self.status) return
 
-      self.#groupId = res.data.groupId
+      self._groupId = res.data.groupId
       if (res.data.code == 0){
         // 移除不需要上传的
-        let total = self.#chunks.length
-        self.#chunks = self.#chunks.filter(it => res.data.chunks.includes(it.hash))
-        let newTotal = self.#chunks.length
-        self.#taskTotal = self.#taskTotal - (total - newTotal)
-        self.#progress('tips', '创建上传任务完成')
+        let total = self._chunks.length
+        self._chunks = self._chunks.filter(it => res.data.chunks.includes(it.hash))
+        let newTotal = self._chunks.length
+        self._taskTotal = self._taskTotal - (total - newTotal)
+        self._progress('tips', '创建上传任务完成')
 
         // 下一步开始上传
-        self.#upload()
+        self._upload()
       } else if (res.data.code == 1){
-        self.#taskTotal = self.#taskTotal - self.#chunks.length
-        self.#chunks = []
-        self.#progress('tips', '创建上传任务完成')
-        self.#getResult()
+        self._taskTotal = self._taskTotal - self._chunks.length
+        self._chunks = []
+        self._progress('tips', '创建上传任务完成')
+        self._getResult()
       }
     }).catch(err => {
-      self.#progress(MaxFileUploader.FAIL, '创建上传任务失败', err)
+      self._progress(MaxFileUploader.FAIL, '创建上传任务失败', err)
     })
   }
 
 
-  #upload() {
+  _upload() {
     // 生成任务
     let self = this
     if (MaxFileUploader.CANCEL == self.status) return
 
-    let chunks = self.#chunks
-    self.#execTaskCount = 0
+    let chunks = self._chunks
+    self._execTaskCount = 0
 
-    self.#progress('tips', '生成上传任务列表')
+    self._progress('tips', '生成上传任务列表')
     let tasks = chunks.map(ck => {
       return function (chunk) {
         return () => {
@@ -326,92 +326,92 @@ export default class MaxFileUploader{
           let formData = new FormData()
           formData.append('hash', chunk.hash)
           formData.append('file', chunk)
-          return self.#config.axios({
-            ...self.#config.uploadRequest,
-            url: self.#config.url + '/' + self.#groupId,
+          return self._config.axios({
+            ...self._config.uploadRequest,
+            url: self._config.url + '/' + self._groupId,
             data: formData
           }).then(res => {
             if (MaxFileUploader.CANCEL == self.status) return
             if (res.data.code == 0 || res.data.code == 1) {
               // 继续上传
-              self.#progress(MaxFileUploader.UPLOADING, '上传中')
+              self._progress(MaxFileUploader.UPLOADING, '上传中')
 
             } else if (res.data.code == 3) {
               // 重试
-              self.#retryChunks.push(chunk)
+              self._retryChunks.push(chunk)
             } else if (res.data.code == 4) {
               // 失败
-              self.#retryChunks.push(chunk)
+              self._retryChunks.push(chunk)
             }
           }).catch(e => {
             if (MaxFileUploader.CANCEL == self.status) return
             // 出错
             chunk.state = 1
-            self.#retryChunks.push(chunk)
+            self._retryChunks.push(chunk)
             console.error('上传文件错误', e)
           }).finally(() => {
-            self.#execTaskCount ++
-            self.#checkReady()
+            self._execTaskCount ++
+            self._checkReady()
           })
         }
       }(ck)
     })
 
-    sendRequests(tasks, self.#config.concurrency)
+    sendRequests(tasks, self._config.concurrency)
   }
 
-  #checkReady(){
+  _checkReady(){
     let self = this
     if (MaxFileUploader.CANCEL == self.status) return
-    if (self.#execTaskCount >= self.#chunks.length){
+    if (self._execTaskCount >= self._chunks.length){
       // 检查是否还有未上传或失败需要重试的
-      // self.#chunks = self.#chunks.filter(it=>it.state == 1)
-      self.#chunks = self.#retryChunks
-      self.#retryChunks = []
-      if (self.#chunks.length) {
-        console.log('重新上传：', self.#chunks)
+      // self._chunks = self._chunks.filter(it=>it.state == 1)
+      self._chunks = self._retryChunks
+      self._retryChunks = []
+      if (self._chunks.length) {
+        console.log('重新上传：', self._chunks)
         // 再次执行
-        self.#upload()
+        self._upload()
         return
       }
       // 请求合并
-      self.#requestMerge()
+      self._requestMerge()
     }
 
   }
 
-  #requestMerge() {
+  _requestMerge() {
     let self = this
     if (MaxFileUploader.CANCEL == self.status) return
-    self.#progress('tips', '文件合并中')
-    self.#config.axios({
-      ...self.#config.mergeRequest,
-      url: self.#config.url + '/merge?groupId=' + self.#groupId,
+    self._progress('tips', '文件合并中')
+    self._config.axios({
+      ...self._config.mergeRequest,
+      url: self._config.url + '/merge?groupId=' + self._groupId,
     }).then(res => {
       // 获取结果
-      self.#getResult()
+      self._getResult()
     }).catch(err => {
-      self.#progress(MaxFileUploader.FAIL, '合并失败', err)
+      self._progress(MaxFileUploader.FAIL, '合并失败', err)
     })
 
   }
 
-  #getResult(){
+  _getResult(){
     let self = this
-    self.#progress('tips', '文件合并中')
+    self._progress('tips', '文件合并中')
     console.log(self)
     taskRetry(
       function (ok, fail) {
         if (MaxFileUploader.CANCEL == self.status) return;
-        self.#config
+        self._config
           .axios({
-            ...self.#config.resultRequest,
-            url: self.#config.url + "/" + self.#groupId,
+            ...self._config.resultRequest,
+            url: self._config.url + "/" + self._groupId,
           })
           .then((res) => {
             if (res.data.code == 2) {
               ok();
-              self.#progress(MaxFileUploader.COMPLETE, "上传完成", res);
+              self._progress(MaxFileUploader.COMPLETE, "上传完成", res);
             } else {
               fail();
             }
@@ -430,45 +430,45 @@ export default class MaxFileUploader{
   
   
 
-  #progress(status, message, ...args){
+  _progress(status, message, ...args){
     let self = this
     self.status = status
     if (MaxFileUploader.FAIL == status) {
       try{
-        self.#catchCallback && self.#catchCallback(self.params, status, message)
+        self._catchCallback && self._catchCallback(self.params, status, message)
       } finally {
-        self.#finallyCallback && self.#finallyCallback(self.params)
-        self.#_handlerFinally()
+        self._finallyCallback && self._finallyCallback(self.params)
+        self.__handlerFinally()
       }
       return
     }
 
     if (MaxFileUploader.CANCEL == status) {
-      self.#finallyCallback && self.#finallyCallback(self.params)
-      self.#_handlerFinally()
+      self._finallyCallback && self._finallyCallback(self.params)
+      self.__handlerFinally()
       return
     }
 
     if (MaxFileUploader.COMPLETE == status) {
       try {
-        self.#thenCallback && self.#thenCallback(self.params, ...args)
+        self._thenCallback && self._thenCallback(self.params, ...args)
       } finally {
-        self.#finallyCallback && self.#finallyCallback(self.params)
-        self.#_handlerFinally()
+        self._finallyCallback && self._finallyCallback(self.params)
+        self.__handlerFinally()
       }
     }
 
     if ('tips' != status) {
-      self.#completeTaskCount++
+      self._completeTaskCount++
     }
-    self.#progressCallback && self.#progressCallback(self.params, status, self.#completeTaskCount, self.#taskTotal, message, ...args)
+    self._progressCallback && self._progressCallback(self.params, status, self._completeTaskCount, self._taskTotal, message, ...args)
   }
 
-  #_handlerFinally(){
+  __handlerFinally(){
     // 处理最终事件
-    if (this.#config.autoCloseThreadPool){
-      if (this.#config.threadPool){
-        this.#config.threadPool.destroy(true)
+    if (this._config.autoCloseThreadPool){
+      if (this._config.threadPool){
+        this._config.threadPool.destroy(true)
       }
     }
   }
@@ -479,8 +479,8 @@ export default class MaxFileUploader{
    */
   cancel(){
     let self = this
-    self.#chunks = [];
-    self.#progress(MaxFileUploader.CANCEL, '取消上传')
+    self._chunks = [];
+    self._progress(MaxFileUploader.CANCEL, '取消上传')
   }
 
   /**
@@ -491,7 +491,7 @@ export default class MaxFileUploader{
     if (!(fn instanceof Function)){
       throw new Error('参数必须是方法')
     }
-    this.#progressCallback = fn
+    this._progressCallback = fn
 
     return this
   }
@@ -504,7 +504,7 @@ export default class MaxFileUploader{
     if (!(fn instanceof Function)) {
       throw new Error('参数必须是方法')
     }
-    this.#thenCallback = fn
+    this._thenCallback = fn
 
     return this
   }
@@ -516,7 +516,7 @@ export default class MaxFileUploader{
     if (!(fn instanceof Function)) {
       throw new Error('参数必须是方法')
     }
-    this.#catchCallback = fn
+    this._catchCallback = fn
 
     return this
   }
@@ -528,7 +528,7 @@ export default class MaxFileUploader{
     if (!(fn instanceof Function)) {
       throw new Error('参数必须是方法')
     }
-    this.#finallyCallback = fn
+    this._finallyCallback = fn
 
     return this
   }
@@ -540,7 +540,7 @@ export default class MaxFileUploader{
     if (!(fn instanceof Function)) {
       throw new Error('参数必须是方法')
     }
-    this.#reserveCallback = fn
+    this._reserveCallback = fn
 
     return this
   }

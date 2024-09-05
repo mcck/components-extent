@@ -4,12 +4,12 @@
 export default class ThreadPool {
   __v_skip = true; // 设置vue跳过代理
 
-  #config = {
+  _config = {
     coreSize: 4,
   }
-  #workUrl = null; // 执行脚本url
-  #pool = [];
-  #taskQueue = [];
+  _workUrl = null; // 执行脚本url
+  _pool = [];
+  _taskQueue = [];
   
 
 
@@ -20,16 +20,16 @@ export default class ThreadPool {
    */
   constructor(config) {
     let self = this
-    config = Object.assign(self.#config, config)
+    config = Object.assign(self._config, config)
     let script = `(${threadCode.toString()})();`
-    self.#workUrl = URL.createObjectURL(new Blob([script], { type: 'text/javascript' }))
+    self._workUrl = URL.createObjectURL(new Blob([script], { type: 'text/javascript' }))
     for (let i = 0; i < config.coreSize; i++) {
-      let work = new Worker(self.#workUrl)
+      let work = new Worker(self._workUrl)
       work.onmessage = function(e){
-        self.#workMessage(this, e)
+        self._workMessage(this, e)
       }
       work.state = 0
-      self.#pool.push(work)
+      self._pool.push(work)
     }
   }
 
@@ -54,7 +54,7 @@ export default class ThreadPool {
 
     let task = fn.toString()
     task = '(()=>' + task + ')()'
-    this.#pool.forEach(work=>{
+    this._pool.forEach(work=>{
       work.postMessage({task, args})
     })
   }
@@ -83,8 +83,8 @@ export default class ThreadPool {
       let dto = new Dto(task, args, resolve, reject)
       let self = this
       // 提交到任务队列
-      self.#taskQueue.push(dto)
-      self.#run()
+      self._taskQueue.push(dto)
+      self._run()
     })
   }
 
@@ -93,26 +93,26 @@ export default class ThreadPool {
    * @param {Boolean} immediately 是否立刻销毁
    */
   destroy(immediately){
-    this.#pool.forEach(work=>{
+    this._pool.forEach(work=>{
       work.terminate()
     })
 
     // 销毁脚本对象
-    URL.revokeObjectURL(this.#workUrl)
-    this.#pool = []
-    this.#taskQueue = []
+    URL.revokeObjectURL(this._workUrl)
+    this._pool = []
+    this._taskQueue = []
   }
 
-  #run() {
+  _run() {
     // 获取一个可用的线程
     let self = this
-    let work = self.#pool.find(it => it.state == 0)
+    let work = self._pool.find(it => it.state == 0)
     if (work == null) {
       return
     }
 
     // 获取一个任务
-    let dto = self.#taskQueue.shift()
+    let dto = self._taskQueue.shift()
     if (dto == null) {
       return
     }
@@ -132,7 +132,7 @@ export default class ThreadPool {
    * @param {Worker} work 线程对象
    * @param {MessageEvent} e 通讯事件
    */
-  #workMessage(work, e) {
+  _workMessage(work, e) {
     let result = e.data
     let dto = work.dto
     work.dto = null
@@ -151,7 +151,7 @@ export default class ThreadPool {
     }
 
     // 执行后续任务
-    this.#run()
+    this._run()
   }
 
 }
