@@ -242,18 +242,31 @@ if (!String.prototype.replaceAll){
 String.prototype.trim2 = function (prefix, suffix){
   let str = this.trim();
   if (prefix != false){
-    if (str.startsWith(prefix)){
-      str = str.substring(prefix.length);
-    }
+    str = trimPrefix(this, prefix);
   }
   if (suffix != false){
     suffix = suffix || prefix;
-    if (str.endsWith(suffix)) {
-      str = str.substring(0, str.lastIndexOf(suffix));
-    }
+    str = trimSuffix(this, suffix);
   }
   return str.trim();
 };
+
+function trimPrefix(str, prefix) {
+  if (str.startsWith(prefix)) {
+    str = str.substring(prefix.length);
+    return trimPrefix(str, prefix);
+  }
+  return str;
+}
+function trimSuffix(str, suffix) {
+  if (str.endsWith(suffix)) {
+    str = str.substring(0, str.lastIndexOf(suffix));
+    return trimSuffix(str, suffix);
+  }
+  return str;
+}
+
+
 
 let substring = String.prototype.substring;
 String.prototype.substring = function (start, end, startOffset=0, endOffset=0) {

@@ -260,6 +260,23 @@ export function deleteInvalidProps(obj, o2) {
   return obj_;
 };
 
+/**
+ * 去除undefined
+ */
+export function deleteUndauntedProps(obj) {
+  if (!(obj instanceof Object)) {
+    return obj;
+  }
+  var obj_ = { ...obj };
+  for (var o in obj) {
+    if (obj[o] == undefined) {
+      delete obj_[o]
+    }
+  }
+  return obj_;
+};
+
+
 
 /**
  * 计算两个对象的字段差集,一传入的传入的参数为结果

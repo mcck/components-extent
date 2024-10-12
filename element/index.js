@@ -1,9 +1,6 @@
 // 组件
 import ImageList from './image-list.vue';
 
-import MessageBox from './message.js'
-
-
 export default {
   /**
    * @param {Object} vue 
@@ -12,7 +9,6 @@ export default {
   install(vue, params) {
 
     vue.component('image-list', ImageList);
-    vue.use(MessageBox);
 
   },
 };

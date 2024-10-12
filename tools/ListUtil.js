@@ -121,7 +121,9 @@ export function findTreeToList(tree, compare, config) {
     }
   }
 
-  find(tree, 0);
+  tree.forEach(it => {
+    find(it, 0);
+  });
 
   return list;
 }
