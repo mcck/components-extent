@@ -1,7 +1,7 @@
 import { onMounted, ref, getCurrentInstance } from 'vue';
 import { FormMode } from '../tools/constant'
 import { hasNotValue } from '../tools/utils';
-import { context } from '../index';
+import { extentContext } from '../index';
 
 /**
  * 表单助手
@@ -225,7 +225,7 @@ export default new Proxy(class FormHelper{
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
-      context().message.alert({
+      extentContext().message.alert({
         message: '添加成功',
         type: 'success',
       });
@@ -256,7 +256,7 @@ export default new Proxy(class FormHelper{
       // self.$emit('confirmAdd', res, form, self.emitParams);
       // self.$emit('confirm', res);
       self.hasFormChange.value = false;
-      context().message.alert({
+      extentContext().message.alert({
         message: '更新成功',
         type: 'success',
       });

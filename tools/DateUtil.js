@@ -1,4 +1,4 @@
-import { context } from '../index';
+import { extentContext } from '../index';
 
 let compute = {};
 
@@ -18,7 +18,7 @@ compute.holiday = function (date1, date2) {
     date1 = date2;
     date2 = date3;
   }
-  let resp = context().holidayCalendar; // 返回假期时间轴
+  let resp = extentContext().holidayCalendar; // 返回假期时间轴
   // 时间轴，从开始那一年起
   let timeAxis = [];
   for (let x=date1.getFullYear(); resp[x] && x<=date2.getFullYear(); x++) {

@@ -22,7 +22,7 @@
  *   style: unauth为style时启用，没有权限时在节点上添加的style
  */
 
-import {context} from '../index';
+import { extentContext } from '../index';
 function buildParams(val){
   if(!val){
     return;
@@ -55,7 +55,7 @@ export function hasPermission(auth){
   assert(auth.code, '没有指定权限代码');
 
   let codes = auth.code.split(',');
-  let codeList = context().authCodeList;
+  let codeList = extentContext().authCodeList;
   if (!codeList){
     console.warn("权限代码没有设置");
     return true;

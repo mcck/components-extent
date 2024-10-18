@@ -15,13 +15,13 @@
  * @param {Function} message.confirm 确认提示消息
  */
 
-let contextSymbol = btoa('COMPONENTS_EXTENT_CONTEXT').replaceAll('=', '')
-window[contextSymbol] = window[contextSymbol] || {};
-export function context(option){
+const extentContextSymbol = btoa('COMPONENTS_EXTENT_CONTEXT').replaceAll('=', '')
+window[extentContextSymbol] = window[extentContextSymbol] || {};
+export function extentContext(option){
   if (option){
-    Object.assign(window[contextSymbol], option);
+    Object.assign(window[extentContextSymbol], option);
   }
-  return window[contextSymbol]
+  return window[extentContextSymbol]
 }
 
 
@@ -96,7 +96,7 @@ export default {
    * @param {Object} params 上下文参数
    */
   install(vue, params) {
-    Object.assign(window[contextSymbol], params);
+    Object.assign(window[extentContextSymbol], params);
     vue.use(Extend);
 
     // 安装指令

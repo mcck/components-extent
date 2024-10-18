@@ -1,7 +1,7 @@
 import { ref, shallowRef, getCurrentInstance, onMounted } from 'vue';
 import newForm from '../entity/Form'
 import { inferElementHeight } from "../tools/utils"
-import { context } from '../index';
+import { extentContext } from '../index';
 
 /**
  * 表格助手
@@ -207,13 +207,13 @@ export default class TableHelper{
     let self = this;
 
     // 提示是否确认删除
-    context().message.confirm(self.tips.deleteRow.format3(row), '提示', {
+    extentContext().message.confirm(self.tips.deleteRow.format3(row), '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
       self.api.deleteById.call(self.api.context, row.id, ops).then(() => {
-        context().message.alert({
+        extentContext().message.alert({
           message: '删除成功',
           type: 'success',
         });

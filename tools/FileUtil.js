@@ -1,7 +1,7 @@
 // 文件管理
 import {isType} from './utils';
 // FileApi 必须拥有upload方法
-import { context } from '../index';
+import { extentContext } from '../index';
 
 
 /**
@@ -30,9 +30,9 @@ import { context } from '../index';
 function upload(object, ops){
   ops = {
     object,
-    queryFileHashFunction: context().queryFileHashFunction, // 查询hash
-    getFileHash: context().getFileHash,
-    uploadFunction: context().uploadFunction, // 上传文件
+    queryFileHashFunction: extentContext().queryFileHashFunction, // 查询hash
+    getFileHash: extentContext().getFileHash,
+    uploadFunction: extentContext().uploadFunction, // 上传文件
     coding: false,
     ...ops,
   };
@@ -373,7 +373,7 @@ function parseUnit(size) {
 }
 
 function fileUrl(path) {
-  let basePath = (context().fileUrlPrefix || '').format3();
+  let basePath = (extentContext().fileUrlPrefix || '').format3();
   let url = basePath + '/' + path;
   return url;
 }

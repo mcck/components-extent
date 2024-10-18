@@ -6,13 +6,17 @@ import { hasNotValue } from "./utils";
  * @param {String} childrenKey 子项字段
  * @returns {Array} list
  */
-export function TreeToList(tree = [], childrenKey = "children", parent) {
+export function TreeToList(tree = [], option = { childrenKey: "children", removeChildren: false }, parent) {
   let arr = [];
   tree.forEach((item) => {
-    arr.push({ ...item, [childrenKey]: null });
-    let child = item[childrenKey];
+    let newItem = { ...item }
+    if (option.removeChildren){
+      delete newItem[option.childrenKey];
+    }
+    arr.push(newItem);
+    let child = item[option.childrenKey];
     if (child && child.length) {
-      let res = TreeToList(child, childrenKey, item);
+      let res = TreeToList(child, option, item);
       arr = arr.concat(res);
     }
     item.parent = parent;
