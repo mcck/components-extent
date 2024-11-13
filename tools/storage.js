@@ -12,8 +12,8 @@ class MyStorage {
   namespace = '';
   storagObj = null;
   constructor(storageObj, ns) {
-    namespace = ns;
-    storagObj = storageObj;
+    this.namespace = ns;
+    this.storagObj = storageObj;
   }
 
   clear() {
@@ -57,7 +57,7 @@ export class Local extends MyStorage {
 
 export class Session extends MyStorage {
   constructor(ns) {
-    super(sessionStorage, ns)
+    super(sessionStorage, ns);
   }
 }
 
@@ -66,24 +66,24 @@ export class Session extends MyStorage {
 function serialize(val){
   let res;
   switch (VALUE_TYPE[typeof (val)]){
-    case VALUE_TYPE.undefined:
-      res = String(VALUE_TYPE.undefined) + '';
-      break;
-    case VALUE_TYPE.boolean:
-      res = String(VALUE_TYPE.boolean) + Number(val);
-      break;
-    case VALUE_TYPE.number:
-      res = String(VALUE_TYPE.number) + val;
-      break;
-    case VALUE_TYPE.string:
-      res = String(VALUE_TYPE.string) + val;
-      break;
-    case VALUE_TYPE.object:
-      res = String(VALUE_TYPE.object) + JSON.stringify(val);
-      break;
-    case VALUE_TYPE.function:
-      res = String(VALUE_TYPE.function) + val.toString();
-      break;
+  case VALUE_TYPE.undefined:
+    res = String(VALUE_TYPE.undefined) + '';
+    break;
+  case VALUE_TYPE.boolean:
+    res = String(VALUE_TYPE.boolean) + Number(val);
+    break;
+  case VALUE_TYPE.number:
+    res = String(VALUE_TYPE.number) + val;
+    break;
+  case VALUE_TYPE.string:
+    res = String(VALUE_TYPE.string) + val;
+    break;
+  case VALUE_TYPE.object:
+    res = String(VALUE_TYPE.object) + JSON.stringify(val);
+    break;
+  case VALUE_TYPE.function:
+    res = String(VALUE_TYPE.function) + val.toString();
+    break;
   }
   return res;
 }
@@ -91,17 +91,17 @@ function deserialize(val){
   let type = val.at(0);
   val = val.substring(1);
   switch(type){
-    case VALUE_TYPE.undefined:
-      return undefined;
-    case VALUE_TYPE.boolean:
-      return Boolean(Number(val))
-    case VALUE_TYPE.number:
-      return Number(val);
-    case VALUE_TYPE.string:
-      return val;
-    case VALUE_TYPE.object:
-      return JSON.parse(val);
-    case VALUE_TYPE.function:
-      return new Function('return '+val)();
+  case VALUE_TYPE.undefined:
+    return undefined;
+  case VALUE_TYPE.boolean:
+    return Boolean(Number(val));
+  case VALUE_TYPE.number:
+    return Number(val);
+  case VALUE_TYPE.string:
+    return val;
+  case VALUE_TYPE.object:
+    return JSON.parse(val);
+  case VALUE_TYPE.function:
+    return new Function('return '+val)();
   }
 }

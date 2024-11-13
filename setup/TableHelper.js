@@ -1,6 +1,6 @@
 import { ref, shallowRef, getCurrentInstance, onMounted } from 'vue';
-import newForm from '../entity/Form'
-import { inferElementHeight } from "../tools/utils"
+import newForm from '../entity/Form';
+import { inferElementHeight } from '../tools/utils';
 import { extentContext } from '../index';
 
 /**
@@ -19,7 +19,7 @@ export default class TableHelper{
     total: 0,
     pageNum: 1,
     pageSize: 10
-  })
+  });
   _computeInferHeight = false;
   _height = shallowRef(300); // 表格高度
   loading = shallowRef(false); // 等待加在
@@ -53,9 +53,9 @@ export default class TableHelper{
     self._tableRef = opt.tableRef;
 
 
-    Object.assign(self.queryParams.value, opt.queryParams)
-    Object.assign(self.tips, opt.tips)
-    Object.assign(self.page.value, opt.page)
+    Object.assign(self.queryParams.value, opt.queryParams);
+    Object.assign(self.tips, opt.tips);
+    Object.assign(self.page.value, opt.page);
 
 
     self.onGetDataBefore = opt.onGetDataBefore;
@@ -69,7 +69,7 @@ export default class TableHelper{
       if (!self._tableRef){
         self._tableRef = ins.refs?.tableRef?.$el;
       }
-    })
+    });
 
     if (opt.autoGetList){
       self.getTableList();
@@ -77,7 +77,7 @@ export default class TableHelper{
 
     // 构造器返回一个代理对象
     return new Proxy(this, {
-      get(target, propKey, receiver) {
+      get(target, propKey, /* receiver */) {
         let val = target[propKey];
         if (val instanceof Function) {
           return function (...arg) {
@@ -115,7 +115,7 @@ export default class TableHelper{
       pageSize: 10
     };
 
-    this.getTableList()
+    this.getTableList();
   }
 
   /**
@@ -160,7 +160,7 @@ export default class TableHelper{
         }
       }
 
-      self.tableData.value = res.records
+      self.tableData.value = res.records;
       page.total = parseInt(res.total);
 
       if(self._computeInferHeight){

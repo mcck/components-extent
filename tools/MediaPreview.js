@@ -176,7 +176,7 @@ const DEFAULT_OPTIONS = Object.freeze({
   movable: true,
   zIndex: 1000,
   scopeId: null,
-})
+});
 
 /* 
 媒体预览
@@ -215,7 +215,7 @@ MediaPreview.prototype.setMedia = function (res) {
         if (item.type && item.src && /img|image|video|audio/.test(item.type)) {
           let type = item.type;
           if (item.type == 'image'){
-            type = 'img'
+            type = 'img';
           }
           let img = document.createElement(type);
           img.src = item.src;
@@ -232,6 +232,9 @@ MediaPreview.prototype.setMedia = function (res) {
   tags.forEach((tag, index)=>{
     if (tag.tagName == 'AUDIO'){
       tag = document.createElement('img');
+      // TODO 修改 require 的方式
+      
+      // eslint-disable-next-line no-undef
       tag.src = require('../assets/audio-default.png');
     }
     tag.className = 'media';
@@ -288,7 +291,7 @@ MediaPreview.prototype.show = function (src = 0, type = Type.IMAGE) {
     // 不做操作
     index = src;
   } else if (typeof (src) == 'string') {
-    self.setMedia([{src, type}])
+    self.setMedia([{src, type}]);
     index = 0;
   } else {
     throw new Error('src must be a number or string');
@@ -677,12 +680,12 @@ const Type = Object.freeze({
   IMAGE: 'img',
   VIDEO: 'video',
   AUDIO: 'audio',
-})
+});
 let previewInstance = new MediaPreview(null, {
   scopeId: 'default'
 });
 MediaPreview.previewInstance = previewInstance;
-MediaPreview.Type = Type
+MediaPreview.Type = Type;
 export {
   previewInstance
 };

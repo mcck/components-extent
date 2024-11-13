@@ -22,9 +22,9 @@ export function isType(val, ...types) {
  */
 export function number_chinese_money(str) {
   var num = parseFloat(str);
-  var strOutput = "",
+  var strOutput = '',
     strUnit = '仟佰拾亿仟佰拾万仟佰拾元角分';
-  num += "00";
+  num += '00';
   var intPos = num.indexOf('.');
   if (intPos >= 0) {
     num = num.substring(0, intPos) + num.substr(intPos + 1, 2);
@@ -33,7 +33,7 @@ export function number_chinese_money(str) {
   for (var i = 0; i < num.length; i++) {
     strOutput += '零壹贰叁肆伍陆柒捌玖'.substr(num.substr(i, 1), 1) + strUnit.substr(i, 1);
   }
-  return strOutput.replace(/零角零分$/, '整').replace(/零[仟佰拾]/g, '零').replace(/零{2,}/g, '零').replace(/零([亿|万])/g, '$1').replace(/零+元/, '元').replace(/亿零{0,3}万/, '亿').replace(/^元/, "零元")
+  return strOutput.replace(/零角零分$/, '整').replace(/零[仟佰拾]/g, '零').replace(/零{2,}/g, '零').replace(/零([亿|万])/g, '$1').replace(/零+元/, '元').replace(/亿零{0,3}万/, '亿').replace(/^元/, '零元');
 }
 
 /**
@@ -43,60 +43,60 @@ export function number_chinese_money(str) {
  * @returns 
  */
 export const numberToCapital = (num, type = '') => {
-  if (!num) return 0
-  const strNum = Number((num + '').replace(/[,，]*/g, '')) + '' // 记录字符
-  num = parseInt(Number(strNum)) // 转为整数，
-  let capitalAr = '零一二三四五六七八九十'
-  let unitAr = ['十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千']
+  if (!num) return 0;
+  const strNum = Number((num + '').replace(/[,，]*/g, '')) + ''; // 记录字符
+  num = parseInt(Number(strNum)); // 转为整数，
+  let capitalAr = '零一二三四五六七八九十';
+  let unitAr = ['十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千'];
   if (type) {
-    capitalAr = '零壹贰叁肆伍陆柒捌玖拾'
-    unitAr = ['拾', '佰', '仟', '万', '拾', '佰', '仟', '亿', '拾', '佰', '仟'] // 单位
+    capitalAr = '零壹贰叁肆伍陆柒捌玖拾';
+    unitAr = ['拾', '佰', '仟', '万', '拾', '佰', '仟', '亿', '拾', '佰', '仟']; // 单位
   }
-  const resultAr = [] // 记录结果，后边json.in就可
-  let index = strNum.length - 1 //记录位数
-  let idx = 0 // 记录单位
-  let percent = 10
+  const resultAr = []; // 记录结果，后边json.in就可
+  let index = strNum.length - 1; //记录位数
+  let idx = 0; // 记录单位
+  let percent = 10;
   const turnNum = (num, percent, index) => {
-    const unit = num / percent
-    const capital = capitalAr[Number(strNum[index])]
+    const unit = num / percent;
+    const capital = capitalAr[Number(strNum[index])];
     if (unit < 1) {
-      resultAr.push(capital)
+      resultAr.push(capital);
       // 出现11【一十一】这种情况
       if (Number(strNum[index]) === 1 && (strNum.length === 2 || strNum.length === 6 || strNum.length === 10)) {
-        resultAr.pop()
+        resultAr.pop();
       }
-      return false //结束递归
+      return false; //结束递归
     } else {
       if (capital === '零') {
         // 万和亿单位不删除
         if (!['万', '亿'].includes(resultAr[resultAr.length - 1])) {
-          resultAr.pop()
+          resultAr.pop();
         }
         // 前面有零在删掉一个零
         if (resultAr[resultAr.length - 1] === '零') {
-          resultAr.pop()
+          resultAr.pop();
         }
       }
-      resultAr.push(capital)
+      resultAr.push(capital);
       // 过滤存在【零万】【零亿】这种情况
       if (['万', '亿'].includes(resultAr[resultAr.length - 2]) && capital === '零') {
-        resultAr.pop()
+        resultAr.pop();
       }
       // 过滤【1亿万】这种情况
       if (resultAr[0] === '万' && resultAr[1] === '亿') {
-        resultAr.shift()
+        resultAr.shift();
       }
       // 末尾【零】删掉
       if (resultAr[0] === '零') {
-        resultAr.pop()
+        resultAr.pop();
       }
-      resultAr.push(unitAr[idx++])
-      turnNum(num, percent * 10, --index)
+      resultAr.push(unitAr[idx++]);
+      turnNum(num, percent * 10, --index);
     }
-  }
-  turnNum(num, percent, index)
-  return resultAr.reverse().join('')
-}
+  };
+  turnNum(num, percent, index);
+  return resultAr.reverse().join('');
+};
 
 
 
@@ -246,15 +246,15 @@ export function deleteInvalidProps(obj, o2) {
   var obj_ = { ...obj };
   for (var o in obj) {
     if (obj[o] == null || obj[o] == undefined) {
-      delete obj_[o]
+      delete obj_[o];
     } else if (typeof (obj[o]) === 'number' && isNaN(obj[o])){
-      delete obj_[o]
+      delete obj_[o];
     } else if (obj[o] instanceof Date && isNaN(obj[o])) {
-      delete obj_[o]
+      delete obj_[o];
     } else if (o2 == true && obj_[o] == ''){
-      delete obj_[o]
+      delete obj_[o];
     } else if (o2 instanceof Function && o2(obj_[o], o)){
-      delete obj_[o]
+      delete obj_[o];
     }
   }
   return obj_;
@@ -270,7 +270,7 @@ export function deleteUndauntedProps(obj) {
   var obj_ = { ...obj };
   for (var o in obj) {
     if (obj[o] == undefined) {
-      delete obj_[o]
+      delete obj_[o];
     }
   }
   return obj_;
@@ -427,7 +427,7 @@ export function backHandle(fn, ctx){
       // 不允许返回
       window.history.pushState('forward', null, '');
     }
-  }
+  };
   // 添加了事件
   console.log('添加了事件');
   window.addEventListener('popstate', callback, false);
@@ -475,29 +475,29 @@ export function backHandle(fn, ctx){
  */
 export function deepMerge(target, ...sources) {
   if (!sources.length) {
-    return target
+    return target;
   }
 
-  const source = sources.shift()
+  const source = sources.shift();
 
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
         if (!target[key]) {
-          Object.assign(target, { [key]: {} })
+          Object.assign(target, { [key]: {} });
         }
-        deepMerge(target[key], source[key])
+        deepMerge(target[key], source[key]);
       } else {
-        Object.assign(target, { [key]: source[key] })
+        Object.assign(target, { [key]: source[key] });
       }
     }
   }
 
-  return deepMerge(target, ...sources)
+  return deepMerge(target, ...sources);
 }
 
 function isObject(item) {
-  return item && typeof item === 'object' && !Array.isArray(item)
+  return item && typeof item === 'object' && !Array.isArray(item);
 }
 
 /**
@@ -511,34 +511,34 @@ function isObject(item) {
  */
 export function retry(fn, options) {
   if (typeof options == 'number') {
-    options = { maxCount: options }
+    options = { maxCount: options };
   }
   options = Object.assign({
     maxCount: 10,
     interval: 5000, // 5秒一次
     tally: 0, // 已重试次数
-  }, options)
+  }, options);
 
   return new Promise((resolve, reject) => {
-    fn(ok, fail)
+    fn(ok, fail);
 
     function ok() {
-      resolve(0)
+      resolve(0);
     }
     function fail() {
       if (++options.tally >= options.maxCount) {
-        reject(1)
+        reject(1);
       } else {
         if (options.interval >= 0) {
           setTimeout(() => {
-            fn(ok, fail)
-          }, options.interval)
+            fn(ok, fail);
+          }, options.interval);
         } else {
-          fn(ok, fail)
+          fn(ok, fail);
         }
       }
     }
-  })
+  });
 }
 
 
@@ -549,39 +549,39 @@ export function retry(fn, options) {
  * @returns 
  */
 export function taskQueueUtil(taskList, maxConcurrency = 10) {
-  return new Promise((resolve, reject) => {
-    let currentConcurrency = 0
-    const taskQueue = []
-    let promises = []
+  return new Promise((resolve, /* reject */) => {
+    let currentConcurrency = 0;
+    const taskQueue = [];
+    let promises = [];
 
     function runTask() {
       if (currentConcurrency >= maxConcurrency) {
-        return
+        return;
       }
 
       if (taskQueue.length === 0) {
-        resolve()
-        return
+        resolve();
+        return;
       }
 
-      currentConcurrency++
+      currentConcurrency++;
 
-      const task = taskQueue.shift()
+      const task = taskQueue.shift();
 
-      let promise = task()
+      let promise = task();
       promise.finally(() => {
-        currentConcurrency--
-        runTask()
-      })
+        currentConcurrency--;
+        runTask();
+      });
 
-      promises.push(promise)
+      promises.push(promise);
     }
 
     taskList.forEach(task => {
-      taskQueue.push(task)
-      runTask()
-    })
-  })
+      taskQueue.push(task);
+      runTask();
+    });
+  });
 }
 
 /**

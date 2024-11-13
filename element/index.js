@@ -6,7 +6,7 @@ export default {
    * @param {Object} vue 
    * @param {Object} params 上下文参数
    */
-  install(vue, params) {
+  install(vue, /* params */) {
 
     vue.component('image-list', ImageList);
 

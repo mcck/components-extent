@@ -18,7 +18,7 @@ import { ElementCreate } from './utils';
 export default class Contextmenu {
   __name = 'contextmenu';
   __styleId = 'custom-contextmenu';
-  __v_skip = true
+  __v_skip = true;
   __options = {
     offset: {x: 0, y: 0},
   };
@@ -133,7 +133,7 @@ function createContextmenuList(menus, ...args) {
             if (menu.click) {
               menu.click.apply(this, args0);
             } else {
-              console.warn("没有设置点击事件");
+              console.warn('没有设置点击事件');
             }
           },
         }

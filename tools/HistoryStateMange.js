@@ -5,12 +5,12 @@ export function init() {
   window.addEventListener('popstate', handlePopstate);
   window.addEventListener('pushstate', function(){
     console.log(11);
-  })
+  });
 }
 
 const events = [];
 function handlePopstate(event){
-  console.log("监听返回", event);
+  console.log('监听返回', event);
   let stopBack = false;
   events.forEach(fn=>{
     try{
@@ -35,7 +35,7 @@ function handlePopstate(event){
  */
 export default function Backhandler(fn, ctx){
   if (!(fn instanceof Function)){
-    throw new Error("参数1必须是Function");
+    throw new Error('参数1必须是Function');
   }
 
   close.fn = fn;

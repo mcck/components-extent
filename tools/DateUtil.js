@@ -14,7 +14,7 @@ compute.holiday = function (date1, date2) {
   date1 = toDate(date1);
   date2 = toDate(date2);
   if (date1 > date2) { // 交换位置
-    let date3 = date1
+    let date3 = date1;
     date1 = date2;
     date2 = date3;
   }
@@ -28,7 +28,7 @@ compute.holiday = function (date1, date2) {
   // 开始时间：只要这一天没结束，就算一天
   // 结束时间：结束时应该从那一天的最后一秒算起
   let startTime = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate(), 0, 0, 0, 0);
-  let endTime = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate(), 23,59,59, 999);
+  let endTime = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate(), 23, 59, 59, 999);
 
   let holiday = [];
   for (let i=0, len=timeAxis.length; i<len && timeAxis[i] <= endTime; i++) { // 循环这一年中每一天，找到离起始时间后最近的一天
@@ -59,7 +59,7 @@ const DAY = HOUR * 24;
  * @param data2 结束时间
  * @param end 以什么单位结尾
  */
-compute.timeDiffer = function (date1, date2, end) {
+compute.timeDiffer = function (date1, date2, /* end */) {
   //    switch (end) {
   //      case 'y':
   //      case 'Y': endTime = 10000000000; break;
@@ -95,7 +95,7 @@ compute.timeDiffer = function (date1, date2, end) {
   let diffValue = date2 - date1;
 
   return timeToDateStr(diffValue);
-}
+};
 
 /**
  * 把毫秒值转时分秒
@@ -103,7 +103,7 @@ compute.timeDiffer = function (date1, date2, end) {
  * @param {Object} end
  */
 export function timeToDateStr (diffValue, end) {
-  let endTime, endSymbol = !!(end === 's' || end === 'S');
+  let /* endTime, */ endSymbol = !!(end === 's' || end === 'S');
 
   let flog = false;
   let result = '';
@@ -203,7 +203,7 @@ compute.timeDifferHoliday = function (date1, date2, bool) {
     };
   }
   return result;
-}
+};
 /**
  * 返回去除假期后的时长
  * @param {Object} date1
@@ -217,7 +217,7 @@ compute.getDuration_holiday = function (date1, date2) {
   // 计算节假日毫秒
   let holiDiffValue = diffValue - (r.length * DAY);
   return holiDiffValue;
-}
+};
 
 // compute.timeDifferHoliday(new Date(2019, 0, 1), new Date()).then(r => {
 // console.log(r);
@@ -242,7 +242,7 @@ export function toDate (date) {
  */
 compute.getDateStateByStart = function (date1, stage, total) {
   date1 = toDate(date1);
-  let now = new ServerDate(), all;
+  let now = new window.ServerDate(), all;
   if (total instanceof Date) {
     all = total - date1; // 计算全部时间
   } else {

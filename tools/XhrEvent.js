@@ -15,8 +15,8 @@
 })();
 ;(function () {
   function xhrEventTrigger (event) {
-    // eslint-disable-next-line no-undef
-    var xhrEvent = new XhrEvent(event, { detail: this });
+     
+    var xhrEvent = new window.XhrEvent(event, { detail: this });
     window.dispatchEvent(xhrEvent);
   }
 
@@ -25,14 +25,14 @@
   function newXHR (args) {
     var realXHR = new oldXHR(args);
 	
-	let oldSend = realXHR.send;
-	realXHR.send = function(data){
-		this.requestBody = data;
-		xhrEventTrigger.call(this, 'xhrSendStart');
-		if(!this.cancel){
-			oldSend.call(this, this.requestBody);
-		}
-	};
+    let oldSend = realXHR.send;
+    realXHR.send = function(data){
+      this.requestBody = data;
+      xhrEventTrigger.call(this, 'xhrSendStart');
+      if(!this.cancel){
+        oldSend.call(this, this.requestBody);
+      }
+    };
 
     // 请求开始
     realXHR.addEventListener('loadstart', function () { xhrEventTrigger.call(this, 'xhrLoadStart'); }, false);

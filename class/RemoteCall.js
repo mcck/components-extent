@@ -1,4 +1,4 @@
-import { guid } from '../tools/utils.js'
+import { guid } from '../tools/utils.js';
 
 /**
  * 远程调用
@@ -21,7 +21,7 @@ const CALL_TYPE = {
   MESSAGE: 3
 };
 
-const EMPTY_FUNC = ()=>{};
+// const EMPTY_FUNC = ()=>{};
 
 export default class RemoteCall{
   _localReady =false; // 标识是否可以调用
@@ -39,9 +39,9 @@ export default class RemoteCall{
 
   _remoteCallWay = null;
 
-  _onStart = ()=>{}
-  _onUpdate = ()=>{}
-  _onMessage = ()=>{}
+  _onStart = ()=>{};
+  _onUpdate = ()=>{};
+  _onMessage = ()=>{};
 
   constructor(options={}){
     if (options.context){
@@ -89,13 +89,13 @@ export default class RemoteCall{
     let self = this;
     self._call = new Proxy(self.remoteCall, {
       get(tagter, prop){
-        if(prop.startsWith("_")){
+        if(prop.startsWith('_')){
           return tagter[prop];
         }
 
         return function proxy(){
           return self.callRemote(prop, ...arguments);
-        }
+        };
       }
     });
   }
@@ -180,18 +180,18 @@ export default class RemoteCall{
    */
   remoteCall(data){
     switch (data.type){
-      case CALL_TYPE.SYSTEM: 
-        this._handleSystemCall(data);
-        break;
-      case CALL_TYPE.CALL: 
-        this._handleRemoteCall(data);
-        break;
-      case CALL_TYPE.RETURN: 
-        this._handleReturnCall(data);
-        break;
-      case CALL_TYPE.MESSAGE: 
-        this._onMessage(data);
-        break;
+    case CALL_TYPE.SYSTEM: 
+      this._handleSystemCall(data);
+      break;
+    case CALL_TYPE.CALL: 
+      this._handleRemoteCall(data);
+      break;
+    case CALL_TYPE.RETURN: 
+      this._handleReturnCall(data);
+      break;
+    case CALL_TYPE.MESSAGE: 
+      this._onMessage(data);
+      break;
     }
   }
 
@@ -200,16 +200,16 @@ export default class RemoteCall{
    */
   _handleSystemCall(data){
     switch(data.name){
-      case 'start':
-        this._remoteReady = true;
-        this.addRemoteCalls(data.args);
-        this._execWaitTaskCall();
-        this._onStart(data);
-        break;
-      case 'update':
-        this.addRemoteCalls(data.args);
-        this._onUpdate(data);
-        break;
+    case 'start':
+      this._remoteReady = true;
+      this.addRemoteCalls(data.args);
+      this._execWaitTaskCall();
+      this._onStart(data);
+      break;
+    case 'update':
+      this.addRemoteCalls(data.args);
+      this._onUpdate(data);
+      break;
     }
   }
   /**
@@ -225,7 +225,7 @@ export default class RemoteCall{
         if (res instanceof Promise){
           res.then(res=>{
             self._returnRemote(data.id, res);
-          })
+          });
         } else {
           self._returnRemote(data.id, res);
         }
@@ -246,7 +246,7 @@ export default class RemoteCall{
     if (index == -1) return;
     let task = this._tasks[index];
     if(data.error){
-      task.reject("远程方法错误：" +data.return);
+      task.reject('远程方法错误：' +data.return);
     } else {
       task.resolve(data.return);
     }
@@ -262,8 +262,8 @@ export default class RemoteCall{
     let self = this;
     if (self._localReady && self._remoteReady){
       self._waitTask.forEach(item=>{
-        self.callRemote(item.name, ...item.args).then(item.resolve).catch(item.reject)
-      })
+        self.callRemote(item.name, ...item.args).then(item.resolve).catch(item.reject);
+      });
       self._waitTask = [];
     }
   }
@@ -305,7 +305,7 @@ export default class RemoteCall{
       context = this._context;
     }
 
-    this._localCalls[name] = {call, context}
+    this._localCalls[name] = {call, context};
     
     return this;
   }

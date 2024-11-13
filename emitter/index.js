@@ -1,4 +1,4 @@
-import MessageChain from '../class/MessageChain.js'
+import MessageChain from '../class/MessageChain.js';
 
 var emitter = new MessageChain({
   registerHandler(config, remove){
@@ -15,4 +15,4 @@ export let emitterInstall = {
   install(vue){
     vue.config.globalProperties.$emitter = emitter;
   }
-}
+};

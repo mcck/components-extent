@@ -11,34 +11,34 @@
  */
 export function taskRetry(fn, options) {
   if (typeof options == 'number') {
-    options = { maxCount: options }
+    options = { maxCount: options };
   }
   options = Object.assign({
     maxCount: 10,
     interval: 5000, // 5秒一次
     tally: 0, // 已重试次数
-  }, options)
+  }, options);
 
   return new Promise((resolve, reject) => {
-    fn(ok, fail)
+    fn(ok, fail);
 
     function ok() {
-      resolve(0)
+      resolve(0);
     }
     function fail() {
       if (++options.tally >= options.maxCount) {
-        reject(1)
+        reject(1);
       } else {
         if (options.interval >= 0) {
           setTimeout(() => {
-            fn(ok, fail)
-          }, options.interval)
+            fn(ok, fail);
+          }, options.interval);
         } else {
-          fn(ok, fail)
+          fn(ok, fail);
         }
       }
     }
-  })
+  });
 }
 
 /**

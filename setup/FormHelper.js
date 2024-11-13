@@ -1,5 +1,5 @@
 import { onMounted, ref, getCurrentInstance } from 'vue';
-import { FormMode } from '../tools/constant'
+import { FormMode } from '../tools/constant';
 import { hasNotValue } from '../tools/utils';
 import { extentContext } from '../index';
 
@@ -12,7 +12,7 @@ export default new Proxy(class FormHelper{
   options={
     isValidateForm: true,
     mode: FormMode.ADD
-  }
+  };
 
   api = {
     context: null,
@@ -27,7 +27,7 @@ export default new Proxy(class FormHelper{
 
   constructor(options){
     let self = this;
-    self.setOptions(options)
+    self.setOptions(options);
 
     if (hasNotValue(this.options.mode)) {
       this.options.mode = FormMode.ADD;
@@ -36,7 +36,7 @@ export default new Proxy(class FormHelper{
     onMounted(() => {
       let ins = getCurrentInstance();
       self.refs = ins.ctx.$refs;
-    })
+    });
   }
 
   setFormData(form={}){
@@ -127,7 +127,7 @@ export default new Proxy(class FormHelper{
       self._execFunctionCallback(self.validateFormFuncs, config, true).then(conf => {
         if (conf.continue){
           if (conf.hasFunc){
-            self._handleConfirm(config)
+            self._handleConfirm(config);
           } else {
             self.refs.formRef.validate(valid => {
               if (valid) self._handleConfirm(config);
@@ -197,7 +197,7 @@ export default new Proxy(class FormHelper{
       } else if (config.mode === FormMode.EDIT) {
         self.handleUpdate(config);
       } else {
-        throw new Error("必须设置模式")
+        throw new Error('必须设置模式');
       }
     });
 
@@ -286,9 +286,9 @@ export default new Proxy(class FormHelper{
 }, 
 // 代理构造器
 {
-  construct(target, args, proxy){
+  construct(target, args, /* proxy */){
     return new Proxy(new target(...args), {
-      get(target, propKey, receiver){
+      get(target, propKey, /* receiver */){
         let val = target[propKey];
         if (val instanceof Function){
           return function(...arg){
@@ -300,7 +300,7 @@ export default new Proxy(class FormHelper{
       }
     });
   }
-})
+});
 
 
 function toFunctionArray(func){

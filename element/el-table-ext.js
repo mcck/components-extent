@@ -1,5 +1,5 @@
-import { inferElementHeight } from "../tools/utils"
-import newForm from '../entity/Form'
+import { inferElementHeight } from '../tools/utils';
+import newForm from '../entity/Form';
 
 /**
  * 表格页面通用方法
@@ -70,7 +70,7 @@ export function newInstance(params){
           loading: false,
           list: [],
           rowContextmenu: []
-        }
+        };
       },
       /**
        * 默认排序
@@ -239,14 +239,14 @@ export function newInstance(params){
        * 默认点击右键
        */
       defaultRowContextmenu(row, column, event){
-        window.stopBubble(event)
-        this.openEdit(row)
+        window.stopBubble(event);
+        this.openEdit(row);
       },
       onConfirmAdd({ data }){
         this.table.list.push(data);
       },
       onConfirmUpdate(form, src){
-        Object.assign(src, form)
+        Object.assign(src, form);
       }
     },
 

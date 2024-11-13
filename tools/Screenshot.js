@@ -91,18 +91,18 @@ let Screenshot = function () {
         self.moveing = false;
       }
     }
-  }
+  };
 
-  mask.onmouseup = function (event) {
+  mask.onmouseup = function (/* event */) {
     // 结束
     self.moveing = false;
-  }
+  };
 
   document.onkeydown = function (event) {
     if (self.screenshot.style.display !== 'none' && event.keyCode === 27) {
       self.cancelCapture();
     }
-  }
+  };
 
   // 添加确认事件
   confirm.onmousedown = window.stopBubble;
@@ -117,15 +117,15 @@ let Screenshot = function () {
     window.stopBubble(e);
     // 调用开始截图方法
     self.confirmCapture();
-  }
+  };
   cancel.onclick = function (e) {
     window.stopBubble(e);
     self.cancelCapture();
-  }
+  };
 
   document.body.appendChild(screenshot);
   this.init();
-}
+};
 
 Screenshot.prototype.init = function () {
   this.mask.removeAttribute('style');
@@ -172,9 +172,9 @@ Screenshot.prototype.init = function () {
   this.baseCanvas.style.zIndex = 3000;
 
   // 清空画布数据
-  this.tailoredCanvas.getContext('2d').clearRect(0,0,this.tailoredCanvas.width,this.tailoredCanvas.height);
-  this.baseCanvas.getContext('2d').clearRect(0,0,this.baseCanvas.width,this.baseCanvas.height);
-}
+  this.tailoredCanvas.getContext('2d').clearRect(0, 0, this.tailoredCanvas.width, this.tailoredCanvas.height);
+  this.baseCanvas.getContext('2d').clearRect(0, 0, this.baseCanvas.width, this.baseCanvas.height);
+};
 
 /**
  * 开始截图
@@ -187,7 +187,7 @@ Screenshot.prototype.tailor = function (option) {
   if (typeof (option) ==='function') {
     this.option = {
       cellback: option
-    }
+    };
   } else {
     this.option = option;
   }
@@ -206,7 +206,7 @@ Screenshot.prototype.tailor = function (option) {
     //      return false;
     //    }
     //  },
-  }).then(function (a,b,c) {
+  }).then(function () {
     self.ready = true;
   });
 };
@@ -244,7 +244,7 @@ Screenshot.prototype.confirmCapture = function () {
     if (self.option.cellback) {
       self.tailoredCanvas.toBlob(self.option.cellback, 'image/png', self.option.quality || 1);
     }
-  }
+  };
 };
 
 /**
@@ -267,7 +267,7 @@ Screenshot.prototype.getSelectedPoint = function () {
     SY = this.EY;
     EY = this.SY;
   }
-  return {SX, SY, EX, EY}
+  return {SX, SY, EX, EY};
 };
 
 export default new Screenshot();

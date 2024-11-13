@@ -23,4 +23,4 @@ export const FormMode = Object.freeze({
 export default {
   LinkSymbol,
   FormMode
-}
+};

@@ -42,7 +42,7 @@ export default {
     return {
       useZIndex: useZIndex(),
       list: [], // 文件列表
-    }
+    };
   },
   props: {
     fileList: {
@@ -79,7 +79,7 @@ export default {
     }
   },
   watch: {
-    fileList:{
+    fileList: {
       deep: true,
       handler(val){
         this.setList(val);
@@ -97,7 +97,7 @@ export default {
           return {
             id: item,
             src: FileUtil.fileUrl(item.id)
-          }
+          };
         } else {
           item.src = FileUtil.fileUrl(item.id);
           return item;
@@ -124,7 +124,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

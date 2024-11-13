@@ -1,4 +1,4 @@
-import { toFixed, guid, hasNotValue } from './utils'
+import { toFixed, guid, hasNotValue } from './utils';
 // import { DatePicker } from 'element-ui';
 // import {eventBus} from './utils/VueTools.js';
 // import { modules} from './router/module.js';
@@ -7,7 +7,7 @@ import { toFixed, guid, hasNotValue } from './utils'
 //  */
 // Vue.prototype.SCREEN_WIDTH = window.innerWidth;
 // Vue.prototype.SCREEN_HEIGHT = window.innerHeight;
-let contextThis = null
+let contextThis = null;
 if (typeof (window) != 'undefined') {
   contextThis = window;
 } else if (typeof (globalThis) != 'undefined') {
@@ -17,7 +17,7 @@ if (typeof (window) != 'undefined') {
 /**
  * 生成UUID
  */
-contextThis.guid = guid
+contextThis.guid = guid;
 /**
  * 复制到剪切板
  */
@@ -104,7 +104,7 @@ Object.deepFreeze = function(obj){
     }
   });
   return Object.freeze(obj);
-}
+};
 
 /**
  * 扩展Date时间转换
@@ -132,12 +132,12 @@ Date.prototype.Format = function (fmt = 'yyyy-MM-dd HH:mm:ss') {
     'H+': () => self.getHours(), // 24小时制
     'm+': () => self.getMinutes(), // 分
     's+': () => self.getSeconds(), // 毫秒
-    'S' : () => self.getMilliseconds(), // 秒
+    'S': () => self.getMilliseconds(), // 秒
     'q+': () => Math.floor((self.getMonth() + 3) / 3), // 月中第几周
-    'e' : () => self.getDay(), // 周中星期几
-    'E' : () => ['日', '一', '二', '三', '四', '五', '六'][self.getDay()],
-    'a' : () => (self.getHours() <= 12 ? 'AM' : 'PM'), // 上下午
-    'A' : () => (self.getHours() <= 12 ? '上午' : '下午') // 上下午
+    'e': () => self.getDay(), // 周中星期几
+    'E': () => ['日', '一', '二', '三', '四', '五', '六'][self.getDay()],
+    'a': () => (self.getHours() <= 12 ? 'AM' : 'PM'), // 上下午
+    'A': () => (self.getHours() <= 12 ? '上午' : '下午') // 上下午
   };
 
   if (/(y+)/.test(fmt)) {
@@ -201,28 +201,10 @@ String.prototype.format2 = function(obj) {
  * @returns 
  */
 String.prototype.format3 = function (obj) {
-  var s = this;
-  var arr = s.match(/[^{][a-zA-Z0-9\\.\-\\+\\*\\/]+(?=\})/g); // 匹配括号里的字符串{xxx} => xxx
-  if (arr) {
-    arr.forEach(it => {
-      var val;
-      if (obj && obj[it]) {
-        val = obj[it];
-      } else {
-        try {
-          // eslint-disable-next-line no-eval
-          val = eval(it);
-        } catch (e) {
-          console.error('替换字符串错误！', it, e);
-        }
-      }
-      if (val) {
-        s = s.replace('{' + it + '}', val);
-      }
-    });
-  }
-
-  return s.toString();
+  return this.replace(/\{([^}]+)\}/, (str, val) => {
+    let fn = new Function(`return this.${val};`);
+    return fn.apply(obj);
+  });
 };
 /**
  * 低版本浏览器没有replaceAll方法
@@ -448,19 +430,19 @@ Array.prototype.count = function (fn) {
     if (fn(item)){
       count++;
     }
-  })
+  });
   return count;
 };
 
 Array.prototype.group = function (groupBy, collect) {
   let res = {};
-  let groupByFn = groupBy
+  let groupByFn = groupBy;
   if (typeof (groupBy) == 'string'){
-    groupByFn = (item) => item[groupBy]
+    groupByFn = (item) => item[groupBy];
   }
   this.forEach(item => {
     let key = groupByFn(item);
-    let val = collect ? collect(key, item) : item
+    let val = collect ? collect(key, item) : item;
     let coll = res[key] = res[key] || [];
     coll.push(val);
   });
@@ -474,7 +456,7 @@ if (!Array.prototype.at){
     if(i>0){
       return this[i];
     }
-    return this[this.length+i]
+    return this[this.length+i];
   };
 }
 
@@ -486,13 +468,13 @@ Array.prototype.contains = function (arr, comparer) {
   if (typeof (comparer) == 'string') {
     comparer_ = function (item1, item2) {
       return item1[comparer] == item2[comparer];
-    }
+    };
   } else if (comparer instanceof Function) {
     comparer_ = comparer;
   } else {
     comparer_ = function (item1, item2) {
       return item1 == item2;
-    }
+    };
   }
   for (let item1 of arr) {
     let flag = false;
@@ -513,7 +495,7 @@ Array.prototype.contains = function (arr, comparer) {
 for (let o in Array.prototype) { 
   Object.defineProperty(Array.prototype, o, {
     enumerable: false
-  })
+  });
 }
 
 
@@ -563,7 +545,7 @@ Boolean.parse = function (bool) {
     return true;
   }
   return false;
-}
+};
 
 
 if (typeof (HTMLElement) != 'undefined'){
@@ -585,7 +567,9 @@ if (typeof (HTMLElement) != 'undefined'){
         value = value.replace(unit, '');
         value = parseFloat(value);
       }
-    } finally {
+      return value;
+    // eslint-disable-next-line no-unused-vars
+    } catch(e) {
       return value;
     }
   };

@@ -12,7 +12,7 @@ export default class MySet extends Array{
 
   _comparer = function(o1, o2){
     return o1 == o2;
-  }
+  };
 
   setComparer(fn){
     if (!(fn instanceof Function)){
@@ -25,7 +25,7 @@ export default class MySet extends Array{
   push(...args){
     for(let i = 0; i < args.length; i++){
       if (!this.includes(args[i])){
-        super.push(args[i])
+        super.push(args[i]);
       }
     }
     return this.length;

@@ -1,4 +1,4 @@
-import { hasNotValue } from "./utils";
+import { hasNotValue } from './utils';
 
 /**
  * tree类型转list
@@ -6,10 +6,10 @@ import { hasNotValue } from "./utils";
  * @param {String} childrenKey 子项字段
  * @returns {Array} list
  */
-export function TreeToList(tree = [], option = { childrenKey: "children", removeChildren: false }, parent) {
+export function TreeToList(tree = [], option = { childrenKey: 'children', removeChildren: false }, parent) {
   let arr = [];
   tree.forEach((item) => {
-    let newItem = { ...item }
+    let newItem = { ...item };
     if (option.removeChildren){
       delete newItem[option.childrenKey];
     }
@@ -32,16 +32,16 @@ export function TreeToList(tree = [], option = { childrenKey: "children", remove
 export function ListToTree(list = [], option) {
   let opt = Object.assign(
     {
-      key: "id",
-      parentKey: "parentId",
-      childrenKey: "children",
+      key: 'id',
+      parentKey: 'parentId',
+      childrenKey: 'children',
       setParent: false,
     },
     option
   );
 
-  if (opt.setParent !== false && typeof opt.setParent != "string") {
-    opt.setParent = "parent";
+  if (opt.setParent !== false && typeof opt.setParent != 'string') {
+    opt.setParent = 'parent';
   }
 
   if (opt.clone) {
@@ -76,7 +76,7 @@ export function ListToTree(list = [], option) {
  */
 export function findTreePath(tree, compare, config) {
   let conf = {
-    children: "children",
+    children: 'children',
     copy: true,
     ...config,
   };
@@ -108,7 +108,7 @@ export function findTreePath(tree, compare, config) {
 
 export function findTreeToList(tree, compare, config) {
   let conf = {
-    children: "children",
+    children: 'children',
     copy: true,
     ...config,
   };

@@ -1,4 +1,4 @@
-import { extentContext } from '../index.js'
+import { extentContext } from '../index.js';
 
 /**
  * form页面通用方法
@@ -220,7 +220,7 @@ export function newInstance() {
   });
   obj.MODE = MODE;
 
-  return obj
+  return obj;
 }
 
 export default newInstance();

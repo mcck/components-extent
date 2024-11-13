@@ -57,7 +57,7 @@ export function hasPermission(auth){
   let codes = auth.code.split(',');
   let codeList = extentContext().authCodeList;
   if (!codeList){
-    console.warn("权限代码没有设置");
+    console.warn('权限代码没有设置');
     return true;
   }
 

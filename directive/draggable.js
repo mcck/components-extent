@@ -52,7 +52,7 @@ function handleMousemove(e){
   if (options.onup) {
     let res = options.onup.call(options.instance, 'move', e);
     if (res == false){
-      return
+      return;
     }
   }
   let pos = options.pos;
@@ -131,6 +131,7 @@ export default {
             let pos = options.pos || {};
             let matrix = getComputedStyle(el).transform;
             if (matrix.startsWith('matrix')){
+              // eslint-disable-next-line no-undef
               matrix = new WebKitCSSMatrix(matrix);
             } else {
               matrix = {e: 0, f: 0};

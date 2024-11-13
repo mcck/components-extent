@@ -62,7 +62,7 @@ export default function newForm(...data){
       target[name] = propValue;
       return true;
     }
-  })
+  });
 
   Object.assign(proxy, ...data);
 
@@ -91,7 +91,7 @@ const handler = {
     end = DateUtil.dayEnd(end);
     target.addCondition(info[0], Form.LINK.between, [start, end]);
   }
-}
+};
 
 Form.LINK = Object.freeze({
   /**等于 */

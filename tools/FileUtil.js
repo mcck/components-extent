@@ -36,41 +36,43 @@ function upload(object, ops){
     coding: false,
     ...ops,
   };
-  ops.groupId = ops.groupId || guid();
+  ops.groupId = ops.groupId || window.guid();
 
-  return new Promise(async (resolve, reject) => {
-    let blobs = buildBlobs(object);
-    ops.blobs = blobs; // 用户选择的文件列表
-    if (!(blobs && blobs.length)){
-      reject('没有需要上传的文件');
-      return;
-    }
+  return new Promise((resolve, reject) => {
+    (async (resolve, reject)=>{
+      let blobs = buildBlobs(object);
+      ops.blobs = blobs; // 用户选择的文件列表
+      if (!(blobs && blobs.length)) {
+        reject('没有需要上传的文件');
+        return;
+      }
 
-    // 检查文件大小
-    if (ops.fizeSize){
-      assertFizeSize(blobs, ops.fizeSize);
-    }
+      // 检查文件大小
+      if (ops.fizeSize) {
+        assertFizeSize(blobs, ops.fizeSize);
+      }
 
-    // 压缩
-    // if (ops.quality){
+      // 压缩
+      // if (ops.quality){
       // imageCompress()
-    // }
+      // }
 
 
-    // 编码
-    if (ops.coding){
-      ops.exist = await handleFileHash(blobs, ops);
+      // 编码
+      if (ops.coding) {
+        ops.exist = handleFileHash(blobs, ops);
 
-      // 整理出重复项
-      handleRepeat(blobs);
-    }
+        // 整理出重复项
+        handleRepeat(blobs);
+      }
 
-    // 开始上传
-    ops.uploads = await _upload(blobs, ops);
+      // 开始上传
+      ops.uploads = await _upload(blobs, ops);
 
-    // 处理结果
-    let result = handleResult(ops);
-    resolve(result);
+      // 处理结果
+      let result = handleResult(ops);
+      resolve(result);
+    })(resolve, reject);
   });
 }
 
@@ -86,7 +88,7 @@ function handleResult(ops){
     result = {
       ...ops.exist,
       ...ops.uploads
-    }
+    };
   } else {
     // 合并上传的和hash的
     result = Object.values({
@@ -137,7 +139,7 @@ function handleRepeat(blobs){
     if (!isRepeat){ // 如果是重复的
       item.repeat = true; // 标记重复
     }
-    return isRepeat
+    return isRepeat;
   });
   return result;
 }
@@ -173,6 +175,8 @@ function fileCoding(file) {
   return new Promise((resolve) => {
     let r = new FileReader();
     r.onload = function () {
+      // TODO 错误
+      // eslint-disable-next-line no-undef
       let hash = getFileHash(r.result);
       if (hash instanceof Promise) {
         hash.then(res=>{
@@ -229,7 +233,7 @@ function assertFizeSize(blobs, threshold){
 
   blobs.forEach((blob, index) => {
     if (blob.size > threshold){
-      let name = blob.name || blob.fieldName || '第'+ (index+1) +'个'
+      let name = blob.name || blob.fieldName || '第'+ (index+1) +'个';
       throw new Error('文件【' + name + '】大小：' + formatUnit(blob.size) +'，超过设置的大小：' + threshold);
     }
   });
@@ -242,7 +246,7 @@ function imageCompress(files, quality) {
     // 遍历需要压缩的
     let promiseTask = [];
     blobs.forEach(blob => {
-      if (blob.type.startsWith("image/")) {
+      if (blob.type.startsWith('image/')) {
         promiseTask.push(_imageCompress(blob, quality));
       }
     });
@@ -262,7 +266,7 @@ function getCompressContext() {
     window.compress_context = compress_context;
   }
 
-  document.body.appendChild(compress_context._canvas)
+  document.body.appendChild(compress_context._canvas);
 
   return compress_context;
 }
@@ -271,7 +275,7 @@ function _imageCompress(blob, quality) {
     let context = getCompressContext();
     context._ctx.clearRect(0, 0, context._canvas.width, context._canvas.height); // 情空画布
     let img = new Image();
-    document.body.appendChild(img)
+    document.body.appendChild(img);
     img.onload = function () {
       let rect = img.getBoundingClientRect();
       context._canvas.width = rect.width;
@@ -282,8 +286,8 @@ function _imageCompress(blob, quality) {
       context._canvas.toBlob(function (b) {
         b.src = blob;
         resolve(b);
-      }, blob.type || 'image/png', quality)
-    }
+      }, blob.type || 'image/png', quality);
+    };
     img.src = URL.createObjectURL(blob);
   });
 }
@@ -294,9 +298,11 @@ function _imageCompress(blob, quality) {
 function selectFileUpload(ops) {
   return selectFile(ops).then(files => {
     return upload(files, ops).then(res => {
+      // TODO 错误
+      // eslint-disable-next-line no-undef
       resolve({ res, input });
     });
-  })
+  });
 }
 /**
  * 选择文件
@@ -344,7 +350,7 @@ function selectFile(options) {
  */
 let unit = ['b', 'k', 'm', 'g', 't'];
 function formatUnit(size = 0) {
-  if (typeof size !== "number"){
+  if (typeof size !== 'number'){
     return size;
   }
   let i = 0;
@@ -380,8 +386,8 @@ function fileUrl(path) {
 
 
 export function base64ToBlob(base64) {
-  const parts = base64.split(";base64,");
-  const contentType = parts[0].split(":")[1];
+  const parts = base64.split(';base64,');
+  const contentType = parts[0].split(':')[1];
   const raw = window.atob(parts[1]);
   const rawLength = raw.length;
 
@@ -394,13 +400,13 @@ export function base64ToBlob(base64) {
 };
 
 export function getFileSuffix(name){
-  return name.substring(name.lastIndexOf('.') + 1)
+  return name.substring(name.lastIndexOf('.') + 1);
 }
 
 export function getMimeSuffix(mime){
   if (!mime) return;
-  let arr = mime.split("/");
-  return arr[arr.length-1]
+  let arr = mime.split('/');
+  return arr[arr.length-1];
 }
 
 

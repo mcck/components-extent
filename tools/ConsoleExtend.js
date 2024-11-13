@@ -17,12 +17,12 @@ if (localValue == 'true'){
 
 global.console.enableLog = function(){
   enable = true;
-  localStorage.setItem(LOCAL_NAME, "true");
-}
+  localStorage.setItem(LOCAL_NAME, 'true');
+};
 global.console.disableLog = function(){
   enable = true;
   localStorage.removeItem(LOCAL_NAME);
-}
+};
 
 for(let key in sysConsole){
   global.console[key] = function(){

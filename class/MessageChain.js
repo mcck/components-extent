@@ -120,10 +120,10 @@ export default class MessageChain {
   post(key, data) {
     let self = this;
     if (this._debug) {
-      console.log('MessageChain debug post', data)
+      console.log('MessageChain debug post', data);
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, /* reject */) => {
       key = self._keySerialize(key);
 
       let chain = self._chain[key];
