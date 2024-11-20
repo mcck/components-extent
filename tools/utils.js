@@ -654,3 +654,7 @@ export function performChunk(list, taskHandler, end) {
 
   _run();
 }
+
+export function isInstance (ins, cls){
+  return ins instanceof cls || ins.classType === cls.classType;
+}

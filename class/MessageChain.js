@@ -152,7 +152,10 @@ export default class MessageChain {
         if (item.handler.length >= 2) { // 2个参数，第一个是data，第二个是next
           item.handler.call(null, nextData, next);
         } else {
-          item.handler.call(null, nextData);
+          let res = item.handler.call(null, nextData);
+          if (res != undefined){
+            nextData = res;
+          }
           next(nextData);
         }
       }
