@@ -575,6 +575,12 @@ if (typeof (HTMLElement) != 'undefined'){
   };
 }
 
+Set.prototype.toJSON = function () {
+  return Array.from(this);
+};
+
+
+
 
 /**
  * 扩展浏览器前进事件

@@ -658,3 +658,32 @@ export function performChunk(list, taskHandler, end) {
 export function isInstance (ins, cls){
   return ins instanceof cls || ins.classType === cls.classType;
 }
+
+/**
+ * 生产一个防抖函数
+ * @param {Function} fn 执行方法
+ * @param {Number} delay 延迟时间
+ */
+export function debounce(fn, delay = 200){
+  let timerId;
+  return ()=>{
+    clearTimeout(timerId);
+    timerId = setTimeout(()=>{
+      fn();
+    }, delay);
+  };
+}
+
+export function newPromise(fn){
+  let resolve_, reject_;
+  let promise = new Promise((resolve, reject) => {
+    resolve_ = resolve;
+    reject_ = reject;
+    if (fn instanceof Function) {
+      fn(resolve_, reject_);
+    }
+  });
+  promise.resolve = resolve_;
+  promise.reject = reject_;
+  return promise;
+}

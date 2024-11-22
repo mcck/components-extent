@@ -15,7 +15,7 @@ export default class TableHelper{
   queryParams = ref({}); // 查询参数
   tips = Object.assign({}, TIPS); // 提示
   order = null;
-  page = shallowRef({ // 分页
+  page = ref({ // 分页
     total: 0,
     pageNum: 1,
     pageSize: 10
@@ -152,7 +152,7 @@ export default class TableHelper{
     }
 
     config.getDataFunc.call(self.api.context, config.queryParams, config.formOptions).then(res=>{
-      let page = self.page;
+      let page = self.page.value;
       if (self.onGetDataAfter instanceof Function) {
         self.onGetDataAfter(config);
         if (!config.continue) {

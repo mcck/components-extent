@@ -39,7 +39,6 @@ export * from './tools/exec/TaskExec.js';
 export {default as MySet} from './entity/MySet.js';
 export { default as MessageChain } from './class/MessageChain.js';
 export { default as RemoteCall } from './class/RemoteCall.js';
-export { default as AntiShake } from './class/AntiShake.js';
 
 // import './tools/ConsoleExtend.js';
 
