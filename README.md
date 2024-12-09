@@ -1,3 +1,5 @@
+[![npm version](https://img.shields.io/npm/v/components-extent.svg?style=flat-square)](https://www.npmjs.com/package/components-extent)
+
 ## 全局安装
 ```js
 import componentsExtent from 'components-extent';
